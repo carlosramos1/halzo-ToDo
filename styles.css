@@ -1,7 +1,8 @@
 :root {
   --color-primary: #fb5f22;
-  --color-primary-m3: #fb713b;
-  --color-primary-m2: #fc8354;
+  --color-primary-m1: #fb713b;
+  --color-primary-m1: #fc8354;
+  --color-primary-m-1: #fb4d09;
 
   --color-surface: #28272D;
   --color-surface-a10: #33313a;
