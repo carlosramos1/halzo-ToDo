@@ -1,13 +1,15 @@
 @font-face {
   font-family: "Blinker";
   src: url(fonts/Blinker/Blinker-Regular.ttf);
+  font-weight: normal;
 }
 
 :root {
   --color-primary: #fb5f22;
   --color-primary-m1: #fb713b;
-  --color-primary-m1: #fc8354;
+  --color-primary-m2: #fc8354;
   --color-primary-m-1: #fb4d09;
+  --color-primary-alpha: #fb5f2288;
 
   --color-surface: #28272D;
   --color-surface-a10: #33313a;
@@ -23,6 +25,154 @@
   padding: 0;
 }
 
-body {
+html {
   font-family: "Blinker", sans-serif;
+  color: white;
+  font-size: 15px;
+}
+
+body {
+  background-color: var(--color-surface-a10);
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+.color-primary {
+  color: var(--color-primary);
+}
+
+.color-primary-m1 {
+  color: var(--color-primary-m1);
+}
+
+.header {
+  background-color: var(--color-surface);
+  padding: 16px;
+}
+
+.container {
+  padding: 10px 20px;
+}
+
+.summary-info {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.summary-info p {
+  font-size: 0.9rem;
+}
+
+.summary-info .circle-percent {
+  border: solid 5px var(--color-surface-a20);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.summary-info .circle-percent p {
+  text-align: center;
+  line-height: 37px;
+  font-size: 16px;
+}
+
+.search {
+  margin: 8px auto;
+}
+
+.search input{
+  background-color: var(--color-surface-a10);
+  border: solid 1px var(--color-primary-alpha);
+  border-radius: 14px;
+  color: white;
+  font-size: 1.05rem;
+  width: 100%;
+  padding: 8px 14px;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: var(--color-primary-m1);
+}
+
+.pending-tasks, .completed-tasks {
+  margin: 8px auto;
+}
+
+.task {
+  display: flex;
+  margin: 12px auto;
+}
+
+.task p {
+  background-color: var(--color-surface-a20);
+  border-radius: 6px;
+  flex-grow: 1;
+  padding: 8px 10px;
+  min-height: 2.43rem;
+  max-width: calc(100% - 5.46rem);
+}
+
+.task button {
+  width: 2.43rem;
+  height: 2.43rem;
+  border: none;
+  border-radius: 6px;
+}
+
+.task .btn-done, .btn-restore {
+  margin: 0 0.3rem;
+  background-color: var(--color-primary-m1);
+  color: white;
+}
+
+.task .btn-delete {
+  background-color: var(--color-surface-a20);
+  border: none;
+  color: red;
+}
+
+.add-task {
+  margin: 12px 0;
+  width: 100%;
+}
+
+.add-task button {
+  background-color: #FFFFFF00;
+  border: none;
+  color: var(--color-primary-m1);
+  width: inherit;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.add-task button hr {
+  color: var(--color-primary-m1);
+  width: calc(100% - 6rem);
+  height: 0;
+  border-top: 0;
+}
+
+.completed-tasks {
+  margin-bottom: 42px;
+}
+
+footer {
+  background-color: #cd3c04;
+  padding: 8px;
+  font-size: .8rem;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: #fc956d;
+  font-weight: bold;
 }
