@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Blinker";
+  src: url(fonts/Blinker/Blinker-Regular.ttf);
+}
+
 :root {
   --color-primary: #fb5f22;
   --color-primary-m1: #fb713b;
@@ -10,4 +15,14 @@
   --color-surface-a30: #605f67;
   --color-surface-a40: #79777e;
   --color-surface-a50: #929197;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Blinker", sans-serif;
 }
