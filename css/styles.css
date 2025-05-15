@@ -218,3 +218,106 @@ a {
   color: #fc956d;
   font-weight: bold;
 }
+
+/* Modal add task */
+.modal {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  background-color: #28272DEE;
+  visibility: hidden;
+}
+
+.modal-newtask {
+  top: 24px;
+  position: relative;
+  width: calc(100% - 40px);
+  margin: 0 auto;
+  background-color: var(--color-surface-a10);
+  border-top: solid 36px var(--color-primary);
+  border-radius: 12px;
+  padding: 12px 22px;
+}
+
+
+.modal-newtask .modal-header {
+  position: absolute;
+  top: -28px;
+  font-size: 1.2rem;
+  text-align: center;
+  width: inherit;
+}
+
+.modal-newtask .btn-close-modal {
+  position: absolute;
+  top: -28px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.modal-newtask textarea {
+  background-color: var(--color-surface-a20);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  color: white;
+  border: solid 1px var(--color-surface-a20);
+  padding: 8px;
+  font-family: Blinker;
+  font-size: 1rem;
+}
+.modal-newtask textarea:focus {
+  outline: none;
+  border: solid 1px var(--color-primary-m1);
+}
+.modal-newtask textarea:focus {
+  outline: none;
+  border: solid 1px var(--color-primary-m1);
+}
+
+.modal-newtask textarea::placeholder {
+  font-family: Blinker;
+  color: var(--color-surface-a50);
+}
+
+.modal-newtask small {
+  color: var(--color-surface-a50);
+}
+
+.modal-newtask .modal-buttons {
+  margin: 8px 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-newtask .modal-buttons button {
+  width: 48%;
+  padding: 4px 0;
+  font-family: Blinker;
+  font-size: 1.15rem;
+  outline: none;
+  border: solid 1px var(--color-surface-a10);
+  border-radius: 8px;
+}
+
+.modal-newtask .modal-buttons .btn-cancel {
+  background-color: var(--color-surface-a10);
+  color: var(--color-primary-m1);
+  border-color: var(--color-primary-m1);
+}
+.modal-newtask .modal-buttons .btn-cancel:hover {
+  background-color: var(--color-surface-a20);
+}
+
+.modal-newtask .modal-buttons .btn-save { 
+  background-color: var(--color-primary-m1);
+  color: white;
+}
+.modal-newtask .modal-buttons .btn-save:hover { 
+  background-color: var(--color-primary);
+}
+
+
+
