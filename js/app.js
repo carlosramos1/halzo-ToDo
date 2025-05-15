@@ -108,6 +108,8 @@ var btnAddTask = document.getElementsByClassName('add-task')[0];
 btnAddTask.addEventListener('click', function(e){
   var modal = document.getElementById('modalAddTask');
   modal.style.visibility = "visible";
+  var textarea = document.querySelector('.modal-newtask textarea');
+  textarea.value = ""
 })
 
 var btnCloseModal = document.querySelector('#modalAddTask .btn-close-modal');
@@ -122,6 +124,27 @@ function closeModal() {
   modal.style.visibility = "hidden";
 }
 
+var btnSaveModal = document.querySelector('#modalAddTask .btn-save');
+btnSaveModal.addEventListener('click', function(e) {
+  var text = document.querySelector('.modal-newtask textarea').value;
+
+  // Validation
+  if(text.length > 150) {
+    var errorText = document.querySelector('#modalAddTask small')
+    errorText.style.color = 'var(--color-primary)'
+    
+    setTimeout(()=>{errorText.style.color = 'var(--color-surface-a50)'}, 1000)
+    
+
+  } else if (text != "") {
+    var task = addTask(text);
+    addArticleTaskPending(task);
+    closeModal();
+  } else if (text == "") {
+    closeModal();
+  }
+})
+
 /**
  * Funciones auxiliares
  */
@@ -135,6 +158,6 @@ function deleteTask(id) {
 
 function addTask(description) {
   var task = new Task(description);
-  allTasks.append(task);
+  allTasks.push(task);
   return task;
 }
