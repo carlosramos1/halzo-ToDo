@@ -28,7 +28,7 @@
 html {
   font-family: "Blinker", sans-serif;
   color: white;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 body {
@@ -52,6 +52,13 @@ h2 {
   padding: 16px;
 }
 
+.header .logo h1 {
+  display: inline-block;
+  position: relative;
+  bottom: 12px;
+  left: 10px;
+}
+
 .container {
   padding: 10px 20px;
 }
@@ -65,6 +72,7 @@ h2 {
 
 .summary-info p {
   font-size: 0.9rem;
+  margin-top: 2px;
 }
 
 .summary-info .circle-percent {
@@ -76,7 +84,7 @@ h2 {
 
 .summary-info .circle-percent p {
   text-align: center;
-  line-height: 37px;
+  line-height: 34px;
   font-size: 16px;
 }
 
@@ -124,21 +132,30 @@ h2 {
   border-radius: 6px;
 }
 
-.task .btn-done, .btn-restore {
+.task .btn-done, .task .btn-restore {
   margin: 0 0.3rem;
   background-color: var(--color-primary-m1);
   color: white;
+}
+.task .btn-done:hover, 
+.task .btn-restore:hover {
+  background-color: var(--color-primary);
 }
 
 .task .btn-delete {
   background-color: var(--color-surface-a20);
   border: none;
-  color: red;
+  color: rgb(179, 8, 8);
+}
+.task .btn-delete:hover {
+  /* border: solid 1px rgb(179, 8, 8);; */
+  background-color: rgb(179, 8, 8, .2);
 }
 
 .add-task {
   margin: 12px 0;
   width: 100%;
+  display: flex;
 }
 
 .add-task button {
@@ -146,8 +163,20 @@ h2 {
   border: none;
   color: var(--color-primary-m1);
   width: inherit;
+  display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 0 2px;
+  font-size: 0.9rem;
+}
+.add-task:hover button,
+.add-task:hover hr {
+  color: var(--color-primary);
+}
+
+.add-task:hover svg  {
+  border-radius: 50%;
+  background-color: var(--color-primary);
 }
 
 .add-task button hr {
@@ -155,6 +184,8 @@ h2 {
   width: calc(100% - 6rem);
   height: 0;
   border-top: 0;
+  position: relative;
+  top: 2px;
 }
 
 .completed-tasks {
