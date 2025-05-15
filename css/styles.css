@@ -90,6 +90,7 @@ h2 {
 
 .search {
   margin: 8px auto;
+  position: relative;
 }
 
 .search input{
@@ -105,6 +106,13 @@ h2 {
 .search input:focus {
   outline: none;
   border-color: var(--color-primary-m1);
+}
+
+.search svg {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  /* visibility: hidden; */
 }
 
 .pending-tasks, .completed-tasks {
@@ -130,6 +138,7 @@ h2 {
   height: 2.43rem;
   border: none;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .task .btn-done, .task .btn-restore {
@@ -137,7 +146,7 @@ h2 {
   background-color: var(--color-primary-m1);
   color: white;
 }
-.task .btn-done:hover, 
+.task .btn-done:hover,
 .task .btn-restore:hover {
   background-color: var(--color-primary);
 }
@@ -169,14 +178,16 @@ h2 {
   margin: 0 2px;
   font-size: 0.9rem;
 }
+
 .add-task:hover button,
 .add-task:hover hr {
   color: var(--color-primary);
+  cursor: pointer;
 }
-
 .add-task:hover svg  {
   border-radius: 50%;
   background-color: var(--color-primary);
+  cursor: pointer;
 }
 
 .add-task button hr {
