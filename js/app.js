@@ -43,12 +43,8 @@ for(let task of allTasks) {
 
 
 /**
- * Funciones auxiliares
+ * Renderizado de las tareas
  */
-function findTask(id) {
-  return  allTasks.find(task => task.id == id);
-}
-
 function addArticleTaskDone(task) {
   var articleTask = document.createElement('article');
   articleTask.classList.add('task');
@@ -69,6 +65,12 @@ function addArticleTaskDone(task) {
     this.parentNode.remove();
     addArticleTaskPending(task);
   });
+
+  // Evento del boton delete
+  articleTask.querySelector('.btn-delete').addEventListener('click', function(e) {
+    deleteTask(this.parentNode.id);
+    this.parentNode.remove();
+  })
 }
 
 function addArticleTaskPending(task) {
@@ -91,4 +93,22 @@ function addArticleTaskPending(task) {
     this.parentNode.remove();
     addArticleTaskDone(task);
   });
+
+  // Evento del boton delete
+  articleTask.querySelector('.btn-delete').addEventListener('click', function(e) {
+    deleteTask(this.parentNode.id);
+    this.parentNode.remove();
+  })
+}
+
+
+/**
+ * Funciones auxiliares
+ */
+function findTask(id) {
+  return  allTasks.find(task => task.id == id);
+}
+
+function deleteTask(id) {
+  return allTasks.filter(task => task.id != id)
 }
