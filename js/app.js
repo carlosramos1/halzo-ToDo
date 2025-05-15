@@ -101,6 +101,26 @@ function addArticleTaskPending(task) {
   })
 }
 
+/**
+ * Show modal new task
+ */
+var btnAddTask = document.getElementsByClassName('add-task')[0];
+btnAddTask.addEventListener('click', function(e){
+  var modal = document.getElementById('modalAddTask');
+  modal.style.visibility = "visible";
+})
+
+var btnCloseModal = document.querySelector('#modalAddTask .btn-close-modal');
+btnCloseModal.addEventListener('click', closeModal);
+var btnCancelModal = document.querySelector('#modalAddTask .btn-cancel');
+btnCancelModal.addEventListener('click', closeModal);
+// var modal = document.getElementById('modalAddTask');
+// modal.addEventListener('click', closeModal);
+
+function closeModal() {
+  var modal = document.getElementById('modalAddTask');
+  modal.style.visibility = "hidden";
+}
 
 /**
  * Funciones auxiliares
@@ -111,4 +131,10 @@ function findTask(id) {
 
 function deleteTask(id) {
   return allTasks.filter(task => task.id != id)
+}
+
+function addTask(description) {
+  var task = new Task(description);
+  allTasks.append(task);
+  return task;
 }
