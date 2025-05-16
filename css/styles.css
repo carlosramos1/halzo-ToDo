@@ -60,6 +60,13 @@ hr {
   color: var(--color-surface-a50) !important;
 }
 
+.hidden-element {
+  visibility: hidden;
+}
+.show-element {
+  visibility: visible !important;
+}
+
 .header {
   background-color: var(--color-surface);
   padding: 16px;
@@ -144,7 +151,7 @@ hr {
   right: 12px;
   top: 8px;
   cursor: pointer;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 .field-add-task small {

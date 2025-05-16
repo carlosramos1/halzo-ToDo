@@ -71,20 +71,25 @@ function eventDeleteTask(task, btnDelete, articleTask) {
   })
 }
 
-function eventSaveTask(element) {
-  element.addEventListener('keyup', function(e) {
-    clearErrorText();
+function eventSaveTask(inputText) {
+  inputText.addEventListener('keyup', function(e) {
+
+    clearErrorMsg();
+    
     if(e.key == "Enter") {
-      var text = inputAddTask.value.trim();
       // Validation
+      var text = inputText.value.trim();
       if ( msg = validateText(text)) {
         showErrorMsg(msg);
       } else {
         var task = addTask(text);
         printTask(task);
-        element.value = "";
+        inputText.value = "";
       }
     }
+
+    showOrHiddenBtnClear(inputText.value.trim())
+    
   })
 }
 
@@ -264,9 +269,18 @@ function showErrorMsg(msg) {
         errorText.innerText = msg;
 }
 
-function clearErrorText() {
+function clearErrorMsg() {
   errorText.classList.remove('color-primary-m1')
   errorText.innerText = "Maximo 450 carácteres.";
+}
+
+function showOrHiddenBtnClear(text) {
+  var btnClearText = document.querySelector('.field-add-task svg');
+  if(text.length > 0) {
+    btnClearText.classList.add('show-element')
+  } else {
+    btnClearText.classList.remove('show-element')
+  }
 }
 
 /**
