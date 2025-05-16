@@ -146,8 +146,7 @@ h2 {
   background-color: var(--color-primary-m1);
   color: white;
 }
-.task .btn-done:hover,
-.task .btn-restore:hover {
+.task .btn-done:hover {
   background-color: var(--color-primary);
 }
 
@@ -157,8 +156,8 @@ h2 {
   color: rgb(179, 8, 8);
 }
 .task .btn-delete:hover {
-  /* border: solid 1px rgb(179, 8, 8);; */
-  background-color: rgb(179, 8, 8, .2);
+  border: solid 1px var(--color-primary-m-1)
+  /* background-color: rgb(179, 8, 8, .2); */
 }
 
 .add-task {
@@ -201,6 +200,18 @@ h2 {
 
 .completed-tasks {
   margin-bottom: 42px;
+}
+
+.completed-tasks .btn-restore {
+  background-color: var(--color-surface-a20);
+  color: var(--color-primary-m1);
+}
+.task .btn-restore:hover {
+  border: solid 1px var(--color-primary-m1);
+}
+
+.completed {
+  color: var(--color-surface-a40);
 }
 
 footer {
