@@ -39,6 +39,11 @@ h2 {
   font-size: 1.15rem;
 }
 
+hr {
+  border: none;
+  border-top: solid 1px var(--color-primary-alpha);
+}
+
 .color-primary {
   color: var(--color-primary);
 }
@@ -88,12 +93,12 @@ h2 {
   font-size: 16px;
 }
 
-.search {
+.field-add-task {
   margin: 8px auto;
   position: relative;
 }
 
-.search input{
+.field-add-task input{
   background-color: var(--color-surface-a10);
   border: solid 1px var(--color-primary-alpha);
   border-radius: 14px;
@@ -101,17 +106,19 @@ h2 {
   font-size: 1.05rem;
   width: 100%;
   padding: 8px 14px;
+  padding-right: 40px;
 }
 
-.search input:focus {
+.field-add-task input:focus {
   outline: none;
   border-color: var(--color-primary-m1);
 }
 
-.search svg {
+.field-add-task svg {
   position: absolute;
   right: 12px;
   top: 8px;
+  cursor: pointer;
   /* visibility: hidden; */
 }
 

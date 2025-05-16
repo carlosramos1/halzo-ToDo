@@ -66,15 +66,23 @@ function eventDeleteTask(task, btnDelete, articleTask) {
   })
 }
 
-function eventSaveTask(btnSave) {
-  btnSave.addEventListener('click', function(e) {
-    var text = document.querySelector('.modal-newtask textarea').value;
-    var task = addTask(text.trim());
-    printTask(task);
-    closeModal();
-    // console.table(allTasks);
+function eventSaveTask(element) {
+  element.addEventListener('keyup', function(e) {
+    if(e.key == "Enter") {
+      var text = inputAddTask.value;
+      var task = addTask(text.trim());
+      printTask(task);
+      element.value = "";
+    }
   })
 }
+
+function eventClearText(btnClearText, inputText) {
+  btnClearText.addEventListener('click', function(e) {
+    inputText.value = "";
+  })
+}
+
 
 /**
  * Service
@@ -163,30 +171,39 @@ function printTask(task) {
 }
 
 /**
+ * Input add task
+ */
+var inputAddTask = document.querySelector('.field-add-task input');
+eventSaveTask(inputAddTask);
+
+var btnClearText = document.querySelector('.field-add-task svg');
+eventClearText(btnClearText, inputAddTask);
+
+/**
  * Show modal new task
  */
-var btnAddTask = document.querySelector('.add-task');
-btnAddTask.addEventListener('click', function(e){
-  var modal = document.getElementById('modalAddTask');
-  modal.style.visibility = "visible";
-  var textarea = document.querySelector('.modal-newtask textarea');
-  textarea.value = ""
-})
+// var btnAddTask = document.querySelector('.add-task');
+// btnAddTask.addEventListener('click', function(e){
+//   var modal = document.getElementById('modalAddTask');
+//   modal.style.visibility = "visible";
+//   var textarea = document.querySelector('.modal-newtask textarea');
+//   textarea.value = ""
+// })
 
-var btnCloseModal = document.querySelector('#modalAddTask .btn-close-modal');
-btnCloseModal.addEventListener('click', closeModal);
-var btnCancelModal = document.querySelector('#modalAddTask .btn-cancel');
-btnCancelModal.addEventListener('click', closeModal);
-// var modal = document.getElementById('modalAddTask');
-// modal.addEventListener('click', closeModal);
+// var btnCloseModal = document.querySelector('#modalAddTask .btn-close-modal');
+// btnCloseModal.addEventListener('click', closeModal);
+// var btnCancelModal = document.querySelector('#modalAddTask .btn-cancel');
+// btnCancelModal.addEventListener('click', closeModal);
+// // var modal = document.getElementById('modalAddTask');
+// // modal.addEventListener('click', closeModal);
 
-function closeModal() {
-  var modal = document.getElementById('modalAddTask');
-  modal.style.visibility = "hidden";
-}
+// function closeModal() {
+//   var modal = document.getElementById('modalAddTask');
+//   modal.style.visibility = "hidden";
+// }
 
-var btnSaveModal = document.querySelector('#modalAddTask .btn-save');
-eventSaveTask(btnSaveModal)
+// var btnSaveModal = document.querySelector('#modalAddTask .btn-save');
+// eventSaveTask(btnSaveModal)
 
 // btnSaveModal.addEventListener('click', function(e) {
 //   var text = document.querySelector('.modal-newtask textarea').value;
@@ -206,8 +223,5 @@ eventSaveTask(btnSaveModal)
 // })
 
 
-// FALTA CONFIRMACIÓN DE ELIMINAR
-// GUARDAR EN LOCAL STORAGE
-// BUSQUEDA
-// TACHAR LAS TAREAS REALIZADAS
 // CALCULAR EL PORCENTAJE
+// OPCION A RECUPERAR UNA TAREA ELIMINADA
