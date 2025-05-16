@@ -75,9 +75,14 @@ hr {
   padding-bottom: 4px;
 }
 
-.summary-info p {
-  font-size: 0.9rem;
+.summary-info-text p {
+  font-size: 1rem;
   margin-top: 2px;
+  color: var(--color-primary-m1);
+}
+
+.summary-info-text p strong {
+  text-decoration: underline;
 }
 
 .summary-info .circle-percent {

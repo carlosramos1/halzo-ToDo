@@ -109,6 +109,11 @@ function toggleDoneTask(task) {
   return task;
 }
 
+function countTaskPendient() {
+  var count = allTasks.filter(task => !task.done).length;
+  return count;
+}
+
 /**
  * Repository
  */
@@ -168,6 +173,8 @@ function printTask(task) {
 
   eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
   eventDeleteTask(task, btnDelete, articleTask);
+
+  updateTextCounterTaskPending();
 }
 
 /**
@@ -178,6 +185,13 @@ eventSaveTask(inputAddTask);
 
 var btnClearText = document.querySelector('.field-add-task svg');
 eventClearText(btnClearText, inputAddTask);
+
+function updateTextCounterTaskPending() {
+  var textCounter = document.querySelector('.summary-info-text strong');
+  var counter = countTaskPendient();
+  textCounter.innerText = counter;
+}
+
 
 /**
  * Show modal new task
