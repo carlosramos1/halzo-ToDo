@@ -48,6 +48,9 @@ var divListTaskDone = document.getElementById("listTasksDone");
 for(let task of allTasks) {
   printTask(task);
 }
+updateTextCounterTaskPending();
+updatePercentageTaskDone();
+/******************************** */
 
 function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
@@ -63,6 +66,8 @@ function eventDeleteTask(task, btnDelete, articleTask) {
     deleteTask(task.id);
     articleTask.remove();
     // console.table(allTasks);
+    updateTextCounterTaskPending();
+    updatePercentageTaskDone();
   })
 }
 
@@ -112,6 +117,17 @@ function toggleDoneTask(task) {
 function countTaskPendient() {
   var count = allTasks.filter(task => !task.done).length;
   return count;
+}
+
+function calcPercentageTaskDone() {
+  if(allTasks.length == 0) {
+    return 0;
+  }
+  var totalTasks = allTasks.length;
+  var totalTasksDone = allTasks.filter(task => task.done).length;
+  var percentage = (totalTasksDone / totalTasks) * 100;
+  percentage = Math.round(percentage);
+  return percentage;
 }
 
 /**
@@ -175,6 +191,7 @@ function printTask(task) {
   eventDeleteTask(task, btnDelete, articleTask);
 
   updateTextCounterTaskPending();
+  updatePercentageTaskDone();
 }
 
 /**
@@ -190,6 +207,12 @@ function updateTextCounterTaskPending() {
   var textCounter = document.querySelector('.summary-info-text strong');
   var counter = countTaskPendient();
   textCounter.innerText = counter;
+}
+
+function updatePercentageTaskDone() {
+  var textPercentage = document.querySelector('.circle-percent p');
+  var percentage = calcPercentageTaskDone();
+  textPercentage.innerText = percentage + "%";
 }
 
 
