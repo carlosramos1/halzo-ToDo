@@ -213,6 +213,29 @@ function updatePercentageTaskDone() {
   var textPercentage = document.querySelector('.circle-percent p');
   var percentage = calcPercentageTaskDone();
   textPercentage.innerText = percentage + "%";
+
+  const circle = document.querySelector('.circle-percent');
+  circle.removeChild(circle.lastChild);
+  const radius = 21;
+  const circumference = 2 * Math.PI * radius;
+  const progressCircle = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  progressCircle.setAttribute("width", "50");
+  progressCircle.setAttribute("height", "50");
+  const circlePath = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  circlePath.setAttribute("cx", "25");
+  circlePath.setAttribute("cy", "25");
+  circlePath.setAttribute("r", radius);
+  circlePath.setAttribute("stroke", "#fb5f22");
+  circlePath.setAttribute("stroke-width", "5");
+  circlePath.setAttribute("fill", "none");
+  circlePath.style.transition = "stroke-dashoffset 0.5s ease-in-out";
+  
+  progressCircle.appendChild(circlePath);
+  circle.appendChild(progressCircle);
+  
+  const offset = circumference - (percentage / 100 * circumference);
+  circlePath.style.strokeDasharray = circumference;
+  circlePath.style.strokeDashoffset = offset;
 }
 
 
