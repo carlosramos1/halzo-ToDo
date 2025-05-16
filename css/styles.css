@@ -131,6 +131,7 @@ h2 {
   padding: 8px 10px;
   min-height: 2.43rem;
   max-width: calc(100% - 5.46rem);
+  overflow-wrap: break-word;
 }
 
 .task button {

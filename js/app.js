@@ -68,7 +68,7 @@ function eventDeleteTask(task, btnDelete, articleTask) {
 function eventSaveTask(btnSave) {
   btnSave.addEventListener('click', function(e) {
     var text = document.querySelector('.modal-newtask textarea').value;
-    var task = addTask(text);
+    var task = addTask(text.trim());
     printTask(task);
     closeModal();
     // console.table(allTasks);
