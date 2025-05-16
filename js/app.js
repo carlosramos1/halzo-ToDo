@@ -17,7 +17,7 @@ class Task {
     this.done = false;
   }
 
-  doneToggle() {
+  toggleDone() {
     this.done = !this.done;
   }
 
@@ -27,18 +27,19 @@ class Task {
 /**
  * Controller
  */
-var listTasksPending = [
-  new Task("Comprar leche y galletas"),
-  new Task("Reparar la gotera del techo del baño"),
-  new Task("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus commodo, justo ut hendrerit venenatis, risus felis accum."),
-]
-var listTasksDone = [
-  new Task("Comprar leche y galletas"),
-  new Task("Comprar comida para el gato"),
-]
-listTasksDone.forEach(task => task.setDone());
-var allTasks = listTasksPending.concat(listTasksDone);
-
+// var listTasksPending = [
+//   new Task("Comprar leche y galletas"),
+//   new Task("Reparar la gotera del techo del baño"),
+//   new Task("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus commodo, justo ut hendrerit venenatis, risus felis accum."),
+// ]
+// var listTasksDone = [
+//   new Task("Comprar leche y galletas"),
+//   new Task("Comprar comida para el gato"),
+// ]
+// listTasksDone.forEach(task => task.setDone());
+// var allTasks = listTasksPending.concat(listTasksDone);
+var allTasks = [];
+loadTasks();
 
 var divListTasksPending = document.getElementById("listTasksPending");
 var divListTaskDone = document.getElementById("listTasksDone");
@@ -50,7 +51,7 @@ for(let task of allTasks) {
 
 function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
-    task.doneToggle();
+    task = toggleDoneTask(task);
     articleTask.remove();
     printTask(task);
     // console.table(allTasks);
@@ -84,13 +85,41 @@ function findTask(id) {
 
 function deleteTask(id) {
   allTasks = allTasks.filter(task => task.id != id)
+  persistTasks();
 }
 
 function addTask(description) {
   var task = new Task(description);
   allTasks.push(task);
+  persistTasks();
   return task;
 }
+
+function toggleDoneTask(task) {
+  task.toggleDone();
+  persistTasks();
+  return task;
+}
+
+/**
+ * Repository
+ */
+function persistTasks() {
+  localStorage.setItem('tasks', JSON.stringify(allTasks));
+}
+
+function loadTasks() {
+  var tasks = JSON.parse(localStorage.getItem('tasks'));
+  if(tasks) {
+    allTasks = tasks.map(task => {
+      var taskInstance = new Task(task.description);
+      taskInstance.id = task.id;
+      taskInstance.done = task.done;
+      return taskInstance;
+    });
+  }
+}
+
 
 /**
  * View
