@@ -73,11 +73,17 @@ function eventDeleteTask(task, btnDelete, articleTask) {
 
 function eventSaveTask(element) {
   element.addEventListener('keyup', function(e) {
+    clearErrorText();
     if(e.key == "Enter") {
-      var text = inputAddTask.value;
-      var task = addTask(text.trim());
-      printTask(task);
-      element.value = "";
+      var text = inputAddTask.value.trim();
+      // Validation
+      if ( msg = validateText(text)) {
+        showErrorMsg(msg);
+      } else {
+        var task = addTask(text);
+        printTask(task);
+        element.value = "";
+      }
     }
   })
 }
@@ -129,6 +135,17 @@ function calcPercentageTaskDone() {
   percentage = Math.round(percentage);
   return percentage;
 }
+
+function validateText(text) {
+  var errorMsg = "";
+  if (text.length == "") {
+    errorMsg = "El campo no puede estar vacío.";
+  } else if (text.length > 450) {
+    errorMsg = "El campo no puede tener más de 450 carácteres.";
+  }
+  return errorMsg;
+}
+
 
 /**
  * Repository
@@ -238,6 +255,19 @@ function updatePercentageTaskDone() {
   circlePath.style.strokeDashoffset = offset;
 }
 
+/**
+ * Error message validation
+ */
+var errorText = document.querySelector('.field-add-task small');
+function showErrorMsg(msg) {
+  errorText.classList.add('color-primary-m1')
+        errorText.innerText = msg;
+}
+
+function clearErrorText() {
+  errorText.classList.remove('color-primary-m1')
+  errorText.innerText = "Maximo 450 carácteres.";
+}
 
 /**
  * Show modal new task
@@ -283,5 +313,6 @@ function updatePercentageTaskDone() {
 // })
 
 
-// CALCULAR EL PORCENTAJE
 // OPCION A RECUPERAR UNA TAREA ELIMINADA
+// EDITAR TAREA
+// VALIDAR

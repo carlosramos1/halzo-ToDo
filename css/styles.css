@@ -45,11 +45,19 @@ hr {
 }
 
 .color-primary {
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
 }
 
 .color-primary-m1 {
-  color: var(--color-primary-m1);
+  color: var(--color-primary-m1) !important;
+}
+
+.color-primary-m-1 {
+  color: var(--color-primary-m-1) !important;
+}
+
+.color-surface-a50 {
+  color: var(--color-surface-a50) !important;
 }
 
 .header {
@@ -78,7 +86,7 @@ hr {
 .summary-info-text p {
   font-size: 1rem;
   margin-top: 2px;
-  color: var(--color-primary-m1);
+  color: var(--color-primary-m2);
 }
 
 .summary-info-text p strong {
@@ -137,6 +145,11 @@ hr {
   top: 8px;
   cursor: pointer;
   /* visibility: hidden; */
+}
+
+.field-add-task small {
+  font-weight: 300;
+  color: var(--color-surface-a50);
 }
 
 .pending-tasks, .completed-tasks {
