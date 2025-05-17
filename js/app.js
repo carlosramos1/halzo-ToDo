@@ -75,7 +75,7 @@ function eventEditTask(task, pTask) {
   pTask.addEventListener('blur', function(e) {
     var newDescription = pTask.innerText.trim();
     if ( msg = validateText(newDescription)) {
-      console.log(msg);
+      showErrorMsg(msg);
       pTask.innerText = task.description;
     } else {
       editTask(task, newDescription);
@@ -95,8 +95,6 @@ function eventEditTask(task, pTask) {
 function eventSaveTask(inputText) {
   inputText.addEventListener('keyup', function(e) {
 
-    clearErrorMsg();
-    
     if(e.key == "Enter") {
       // Validation
       var text = inputText.value.trim();
@@ -294,15 +292,14 @@ function updatePercentageTaskDone() {
 /**
  * Error message validation
  */
-var errorText = document.querySelector('.field-add-task small');
+var alertBox = document.querySelector('.alert')
+var alertText = document.querySelector('.alert p');
 function showErrorMsg(msg) {
-  errorText.classList.add('color-primary-m1')
-  errorText.innerText = msg;
-}
-
-function clearErrorMsg() {
-  errorText.classList.remove('color-primary-m1')
-  errorText.innerText = "Maximo 450 carácteres.";
+  alertBox.classList.add('show')
+  alertText.innerText = msg;
+  setTimeout(() => {
+    alertBox.classList.remove('show')
+  }, 4000);
 }
 
 function showOrHiddenBtnClear(text) {
@@ -360,3 +357,4 @@ function showOrHiddenBtnClear(text) {
 
 // OPCION A RECUPERAR UNA TAREA ELIMINADA
 // Mostrar un mensaje de error al editar una tarea
+// Verificar inyeccion de codigo <script>alert("hack")</script>

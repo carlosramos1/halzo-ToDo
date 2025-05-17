@@ -216,6 +216,40 @@ hr {
   /* background-color: rgb(179, 8, 8, .2); */
 }
 
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.alert {
+  position: fixed;
+  top: 24px;
+  width: 100%;
+  padding: 0 84px;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s ease-in-out;
+}
+
+.alert.show {
+  visibility: visible;
+  opacity: 1;
+  animation: slideDown 0.5s ease-out;
+}
+
+.alert p {
+  background-color: #cd3c04DD;
+  padding: 6px 18px;
+  border-radius: 8px;
+  text-align: center;
+}
+
 .add-task {
   margin: 12px 0;
   width: 100%;
