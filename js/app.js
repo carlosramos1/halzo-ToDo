@@ -44,6 +44,8 @@ loadTasks();
 var divListTasksPending = document.getElementById("listTasksPending");
 var divListTaskDone = document.getElementById("listTasksDone");
 
+document.getElementById('formAddTask').addEventListener('submit', (e) => {e.preventDefault()})
+
 /** Llenado inicial de las tareas */
 for(let task of allTasks) {
   printTask(task);
@@ -104,6 +106,7 @@ function eventSaveTask(inputText) {
         var task = addTask(text);
         printTask(task);
         inputText.value = "";
+        inputText.blur();
       }
     }
 
