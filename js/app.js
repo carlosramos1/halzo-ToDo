@@ -209,10 +209,11 @@ function printTask(task) {
   articleTask.id = task.id;
 
   var pText = document.createElement('p');
-  pText.setAttribute('contenteditable', '');
   pText.innerText = task.description;
   if(task.done) {
     pText.classList.add('completed');
+  } else {
+    pText.setAttribute('contenteditable', '');
   }
 
   var btnDoneRestore = document.createElement('button');
