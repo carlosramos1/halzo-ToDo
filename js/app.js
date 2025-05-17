@@ -79,20 +79,14 @@ function eventEditTask(task, pTask) {
       pTask.innerText = task.description;
     } else {
       editTask(task, newDescription);
+      pTask.innerHTML = newDescription; // Eliminando el formato de texto
     }
   })
-
+  
   pTask.addEventListener('keydown', function(e) {
     if(e.key == "Enter") {
       e.preventDefault();
-      var newDescription = pTask.innerText.trim();
-      if ( msg = validateText(newDescription)) {
-        console.log(msg);
-        pTask.innerText = task.description;
-      } else {
-        editTask(task, newDescription);
-        pTask.blur();
-      }
+      pTask.blur();
     }
   })
 }
