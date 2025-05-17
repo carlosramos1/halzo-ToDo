@@ -178,6 +178,10 @@ hr {
   width: calc(100% - 5.46rem);
   overflow-wrap: break-word;
 }
+.task p:focus {
+  outline: none;
+  border: solid 1px var(--color-primary-m1);
+}
 
 .task small {
   font-weight: 300;
