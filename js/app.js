@@ -7,6 +7,7 @@ class Task {
     this.id = Math.random()
     this.description = description;
     this.done = false;
+    this.delete = false;
   }
 
   setDone() {
@@ -19,6 +20,14 @@ class Task {
 
   toggleDone() {
     this.done = !this.done;
+  }
+
+  deleted() {
+    this.delete = true;
+  }
+
+  isDeleted() {
+    return this.delete;
   }
 
 }
@@ -65,7 +74,7 @@ function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
 
 function eventDeleteTask(task, btnDelete, articleTask) {
   btnDelete.addEventListener('click', function(e) {
-    deleteTask(task.id);
+    deleteTask(task);
     articleTask.remove();
     // console.table(allTasks);
     updateTextCounterTaskPending();
@@ -129,8 +138,8 @@ function findTask(id) {
   return  allTasks.find(task => task.id == id);
 }
 
-function deleteTask(id) {
-  allTasks = allTasks.filter(task => task.id != id)
+function deleteTask(task) {
+  task.deleted();
   persistTasks();
 }
 
@@ -155,16 +164,16 @@ function toggleDoneTask(task) {
 }
 
 function countTaskPendient() {
-  var count = allTasks.filter(task => !task.done).length;
+  var count = allTasks.filter(task => !task.delete && !task.done).length;
   return count;
 }
 
 function calcPercentageTaskDone() {
-  if(allTasks.length == 0) {
+  if(allTasks.length == 0 || allTasks.filter(task => !task.delete).length == 0) {
     return 0;
   }
-  var totalTasks = allTasks.length;
-  var totalTasksDone = allTasks.filter(task => task.done).length;
+  var totalTasks = allTasks.filter(task => !task.delete).length;
+  var totalTasksDone = allTasks.filter(task => task.done && !task.delete).length;
   var percentage = (totalTasksDone / totalTasks) * 100;
   percentage = Math.round(percentage);
   return percentage;
@@ -195,6 +204,7 @@ function loadTasks() {
       var taskInstance = new Task(task.description);
       taskInstance.id = task.id;
       taskInstance.done = task.done;
+      taskInstance.delete = task.delete;
       return taskInstance;
     });
   }
@@ -205,6 +215,9 @@ function loadTasks() {
  * View
  */
 function printTask(task) {
+  if(task.delete) {
+    return;
+  }
   var articleTask = document.createElement('article');
   articleTask.classList.add('task');
   articleTask.id = task.id;
@@ -359,4 +372,3 @@ function showOrHiddenBtnClear(text) {
 
 
 // OPCION A RECUPERAR UNA TAREA ELIMINADA
-// Verificar inyeccion de codigo <script>alert("hack")</script>
