@@ -81,7 +81,7 @@ function eventEditTask(task, pTask) {
       pTask.innerText = task.description;
     } else {
       editTask(task, newDescription);
-      pTask.innerHTML = newDescription; // Eliminando el formato de texto
+      pTask.innerText = newDescription; // Eliminando el formato de texto
     }
   })
   
@@ -359,5 +359,4 @@ function showOrHiddenBtnClear(text) {
 
 
 // OPCION A RECUPERAR UNA TAREA ELIMINADA
-// Mostrar un mensaje de error al editar una tarea
 // Verificar inyeccion de codigo <script>alert("hack")</script>
