@@ -71,6 +71,18 @@ function eventDeleteTask(task, btnDelete, articleTask) {
   })
 }
 
+function eventEditTask(task, pTask) {
+  pTask.addEventListener('blur', function(e) {
+    var newDescription = pTask.innerText.trim();
+    if ( msg = validateText(newDescription)) {
+      console.log(msg);
+      pTask.innerText = task.description;
+    } else {
+      editTask(task, newDescription);
+    }
+  })
+}
+
 function eventSaveTask(inputText) {
   inputText.addEventListener('keyup', function(e) {
 
@@ -89,7 +101,7 @@ function eventSaveTask(inputText) {
     }
 
     showOrHiddenBtnClear(inputText.value.trim())
-    
+
   })
 }
 
@@ -117,6 +129,13 @@ function addTask(description) {
   allTasks.push(task);
   persistTasks();
   return task;
+}
+
+function editTask(task, newDescription) {
+  if(task) {
+    task.description = newDescription;
+    persistTasks();
+  }
 }
 
 function toggleDoneTask(task) {
@@ -180,10 +199,11 @@ function printTask(task) {
   articleTask.classList.add('task');
   articleTask.id = task.id;
 
-  var text = document.createElement('p');
-  text.innerText = task.description;
+  var pText = document.createElement('p');
+  pText.setAttribute('contenteditable', '');
+  pText.innerText = task.description;
   if(task.done) {
-    text.classList.add('completed');
+    pText.classList.add('completed');
   }
 
   var btnDoneRestore = document.createElement('button');
@@ -199,7 +219,7 @@ function printTask(task) {
   btnDelete.classList.add('btn-delete');
   btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
   
-  articleTask.appendChild(text);
+  articleTask.appendChild(pText);
   articleTask.appendChild(btnDoneRestore);
   articleTask.appendChild(btnDelete);
 
@@ -211,6 +231,7 @@ function printTask(task) {
 
   eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
   eventDeleteTask(task, btnDelete, articleTask);
+  eventEditTask(task, pText);
 
   updateTextCounterTaskPending();
   updatePercentageTaskDone();
@@ -266,7 +287,7 @@ function updatePercentageTaskDone() {
 var errorText = document.querySelector('.field-add-task small');
 function showErrorMsg(msg) {
   errorText.classList.add('color-primary-m1')
-        errorText.innerText = msg;
+  errorText.innerText = msg;
 }
 
 function clearErrorMsg() {
@@ -328,5 +349,4 @@ function showOrHiddenBtnClear(text) {
 
 
 // OPCION A RECUPERAR UNA TAREA ELIMINADA
-// EDITAR TAREA
-// VALIDAR
+// Mostrar un mensaje de error al editar una tarea

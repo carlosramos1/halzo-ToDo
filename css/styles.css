@@ -165,17 +165,24 @@ hr {
 
 .task {
   display: flex;
+  flex-wrap: wrap;
   margin: 12px auto;
 }
 
 .task p {
   background-color: var(--color-surface-a20);
   border-radius: 6px;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   padding: 8px 10px;
   min-height: 2.43rem;
-  max-width: calc(100% - 5.46rem);
+  width: calc(100% - 5.46rem);
   overflow-wrap: break-word;
+}
+
+.task small {
+  font-weight: 300;
+  color: var(--color-primary-m1);
+  /* position: absolute; */
 }
 
 .task button {
