@@ -81,7 +81,22 @@ function eventEditTask(task, pTask) {
       editTask(task, newDescription);
     }
   })
+
+  pTask.addEventListener('keydown', function(e) {
+    if(e.key == "Enter") {
+      e.preventDefault();
+      var newDescription = pTask.innerText.trim();
+      if ( msg = validateText(newDescription)) {
+        console.log(msg);
+        pTask.innerText = task.description;
+      } else {
+        editTask(task, newDescription);
+        pTask.blur();
+      }
+    }
+  })
 }
+
 
 function eventSaveTask(inputText) {
   inputText.addEventListener('keyup', function(e) {
