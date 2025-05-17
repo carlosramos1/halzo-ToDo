@@ -29,9 +29,13 @@ html {
   font-family: "Blinker", sans-serif;
   color: white;
   font-size: 14px;
+  background-color: #404040;
 }
 
+
 body {
+  max-width: 550px;
+  margin: 0 auto;
   background-color: var(--color-surface-a10);
 }
 
@@ -81,6 +85,7 @@ hr {
 
 .container {
   padding: 10px 20px;
+  min-height: calc(100vh - 81px - 30px);
 }
 
 .summary-info {
@@ -230,8 +235,11 @@ hr {
 .alert {
   position: fixed;
   top: 24px;
-  width: 100%;
-  padding: 0 84px;
+  left: 0;
+  right: 0;
+  width: fit-content;
+  max-width: 350px;
+  margin: 0 auto;
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
@@ -248,6 +256,7 @@ hr {
   padding: 6px 18px;
   border-radius: 8px;
   text-align: center;
+  text-wrap: wrap;
 }
 
 .add-task {
@@ -309,8 +318,8 @@ footer {
   padding: 8px;
   font-size: .8rem;
   text-align: center;
-  position: fixed;
-  bottom: 0;
+  /* position: fixed; */
+  /* bottom: 0; */
   width: 100%;
 }
 
