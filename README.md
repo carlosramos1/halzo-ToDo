@@ -26,7 +26,7 @@ Tiene un diseño simple y muy fácil de usar. Consta de cuatro secciones:
 
 ## Tecnologías utilizadas
 
-El desarrollo de esta aplicación web se hizo con **HTML, CSS y JavaScript vanilla**. La persistencia de datos (tareas) está en **Local Storage**.
+El desarrollo de esta aplicación web fue con **HTML, CSS y JavaScript vanilla**. La persistencia de datos (tareas) está en **Local Storage**.
 
 ## Developer
 
