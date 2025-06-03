@@ -1,0 +1,17 @@
+{
+  "name" : "Hazlo ToDo",
+  "version" : "1.0",
+  "description" : "A simple ToDo app to manage your tasks",
+  "short_name": "Hazlo ToDo",
+  "background": "#28272D",
+  "theme_color": "#28272D",
+  "display": "standalone",
+  "start_url": "/halzo-ToDo/index.html",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
