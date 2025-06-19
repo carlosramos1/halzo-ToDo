@@ -164,6 +164,21 @@ hr {
   color: var(--color-surface-a50);
 }
 
+.btn-add-task {
+  position: absolute;
+  right: 0px;
+  bottom: -7px;
+  width: 57px;
+  height: 20px;
+  background-color: var(--color-primary-m1);
+  color: white;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  visibility: hidden;
+}
+
 .pending-tasks, .completed-tasks {
   margin: 8px auto;
 }

@@ -103,30 +103,37 @@ function eventEditTask(task, pTask) {
 }
 
 
-function eventSaveTask(inputText) {
+function eventSaveTask(inputText, btnSaveTask) {
+
   inputText.addEventListener('keyup', function(e) {
+    showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
+  })
+  
+  inputText.addEventListener('blur', function(e) {
+    showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
+  })
 
-    if(e.key == "Enter") {
-      // Validation
-      var text = inputText.value.trim();
-      if ( msg = validateText(text)) {
-        showErrorMsg(msg);
-      } else {
-        var task = addTask(text);
-        printTask(task);
-        inputText.value = "";
-        inputText.blur();
-      }
+  btnSaveTask.addEventListener('click', function(e) {
+    // Este evento igual se activa cuando se presiona Enter en el input
+    // console.log("evento click")
+    // Validation
+    var text = inputText.value.trim();
+    if ( msg = validateText(text)) {
+      showErrorMsg(msg);
+    } else {
+      var task = addTask(text);
+      printTask(task);
+      inputText.value = "";
+      inputText.blur();
     }
-
-    showOrHiddenBtnClear(inputText.value.trim())
-
+    showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
   })
 }
 
 function eventClearText(btnClearText, inputText) {
   btnClearText.addEventListener('click', function(e) {
     inputText.value = "";
+    showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
   })
 }
 
@@ -265,7 +272,8 @@ function printTask(task) {
  * Input add task
  */
 var inputAddTask = document.querySelector('.field-add-task input');
-eventSaveTask(inputAddTask);
+var btnAddTask = document.querySelector('.field-add-task button');
+eventSaveTask(inputAddTask, btnAddTask);
 
 var btnClearText = document.querySelector('.field-add-task svg');
 eventClearText(btnClearText, inputAddTask);
@@ -318,12 +326,15 @@ function showErrorMsg(msg) {
   }, 4000);
 }
 
-function showOrHiddenBtnClear(text) {
+function showOrHiddenBtnClearAndBtnSaveTask(text) {
   var btnClearText = document.querySelector('.field-add-task svg');
+  var btnSaveTask = document.querySelector('.field-add-task button');
   if(text.length > 0) {
     btnClearText.classList.add('show-element')
+    btnSaveTask.classList.add('show-element');
   } else {
     btnClearText.classList.remove('show-element')
+    btnSaveTask.classList.remove('show-element');
   }
 }
 
