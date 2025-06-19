@@ -102,7 +102,6 @@ function eventEditTask(task, pTask) {
   })
 }
 
-
 function eventSaveTask(inputText, btnSaveTask) {
 
   inputText.addEventListener('keyup', function(e) {
@@ -134,6 +133,25 @@ function eventClearText(btnClearText, inputText) {
   btnClearText.addEventListener('click', function(e) {
     inputText.value = "";
     showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
+  })
+}
+
+function eventShowMenu(menuIcon, menuContainer) {
+  menuIcon.addEventListener('click', function(e) {
+    menuContainer.classList.add('show');
+  })
+}
+
+function eventCloseMenu(menuContainer) {
+  menuContainer.addEventListener('click', function(e) {
+    menuContainer.classList.remove('show');
+  })
+
+  // Evitar que el evento click se propague a los hijos del menú
+  menuContainer.childNodes.forEach(node => {
+    node.addEventListener('click', function(e) {
+      e.stopPropagation();
+    })
   })
 }
 
@@ -229,12 +247,12 @@ function printTask(task) {
   articleTask.classList.add('task');
   articleTask.id = task.id;
 
-  var pText = document.createElement('p');
-  pText.innerText = task.description;
+  var pTask = document.createElement('p');
+  pTask.innerText = task.description;
   if(task.done) {
-    pText.classList.add('completed');
+    pTask.classList.add('completed');
   } else {
-    pText.setAttribute('contenteditable', '');
+    pTask.setAttribute('contenteditable', '');
   }
 
   var btnDoneRestore = document.createElement('button');
@@ -250,7 +268,7 @@ function printTask(task) {
   btnDelete.classList.add('btn-delete');
   btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
   
-  articleTask.appendChild(pText);
+  articleTask.appendChild(pTask);
   articleTask.appendChild(btnDoneRestore);
   articleTask.appendChild(btnDelete);
 
@@ -262,11 +280,19 @@ function printTask(task) {
 
   eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
   eventDeleteTask(task, btnDelete, articleTask);
-  eventEditTask(task, pText);
+  eventEditTask(task, pTask);
 
   updateTextCounterTaskPending();
   updatePercentageTaskDone();
 }
+
+/**
+ * Menu
+ */
+var menuIcon = document.querySelector('.menu-icon');
+var menuContainer = document.querySelector('.menu-container');
+eventShowMenu(menuIcon, menuContainer);
+eventCloseMenu(menuContainer);
 
 /**
  * Input add task
