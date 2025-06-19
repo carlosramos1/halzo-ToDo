@@ -155,6 +155,13 @@ function eventCloseMenu(menuContainer) {
   })
 }
 
+function eventExportTasks(menuExportTasks, menuContainer) {
+  menuExportTasks.addEventListener('click', function(e) {
+    exportTastks();
+    menuContainer.click(); // Cierra el menú
+  })
+}
+
 
 /**
  * Service
@@ -212,6 +219,20 @@ function validateText(text) {
     errorMsg = "El campo no puede tener más de 450 carácteres.";
   }
   return errorMsg;
+}
+
+function exportTastks() {
+  var data = JSON.stringify(allTasks, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'tasks.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showErrorMsg("Tareas exportadas correctamente.");
 }
 
 
@@ -294,6 +315,8 @@ var menuContainer = document.querySelector('.menu-container');
 eventShowMenu(menuIcon, menuContainer);
 eventCloseMenu(menuContainer);
 
+var menuExportTasks = document.querySelector('.menu .export-tasks');
+eventExportTasks(menuExportTasks, menuContainer);
 /**
  * Input add task
  */
