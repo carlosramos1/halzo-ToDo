@@ -126,24 +126,32 @@
         </article> -->
       </div>
     </section>
-
   </section>
 
-  <!-- modal add task -->
-  <!-- <div class="modal" id="modalAddTask">
-    <div class="modal-newtask">
-      <h2 class="modal-header">Añadir tarea</h2>
-      <span class="btn-close-modal">
-        <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#fff"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
-      </span>
-      <textarea rows="3" placeholder="¿Qué tarea tienes que hacer?"></textarea>
-      <small>Max. 150 carácteres.</small>
-      <div class="modal-buttons">
-        <button class="btn-cancel">Cancelar</button>
-        <button class="btn-save">Guardar</button>
+
+    <!-- modal add task -->
+    <div class="modal" id="modalAddTask">
+      <div class="modal-header">
+        <p>Importar tareas</p>
+        <span class="btn-close-modal">
+          <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#79777e"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
+        </span>
       </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="fileImport">Selecciona un archivo JSON:</label>
+            <input type="file" id="fileImport" accept=".json" required>
+          </div>
+          <div class="modal-buttons">
+            <!-- <button class="btn-cancel">Cancelar</button> -->
+            <small>¡ATENCIÓN! Esta acción borrará las tareas actuales y las reemplazará por las tares del archivo JSON</small>
+            <button class="btn btn-primary">Importar</button>
+          </div>
+        </form>
+     </div>
     </div>
-  </div> -->
+
 
   <footer>
     <p>&copy; 2025 Dev. Carlos Ramos <a href="https://www.linkedin.com/in/carlosramos05/" target="_blank">Linkedin</a> | <a href="https://github.com/carlosramos1" target="_blank">GitHub</a> | <a href="https://gitlab.com/carlosramos14" target="_blank">GitLab</a></p>
