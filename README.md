@@ -2,7 +2,7 @@
 
 Es una pequeña aplicación web para listar tareas. 
 
-Demo: https://carlosramos1.github.io/halzo-ToDo/
+Demo: [https://carlosramos1.github.io/halzo-ToDo/](https://carlosramos1.github.io/hazlo-ToDo/)
 
 Tiene un diseño simple y muy fácil de usar. Consta de cuatro secciones:
 
