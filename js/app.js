@@ -47,30 +47,24 @@ class Task {
 // ]
 // listTasksDone.forEach(task => task.setDone());
 // var allTasks = listTasksPending.concat(listTasksDone);
-var allTasks = [];
-loadTasks();
 
+// * Variables Globales
+var allTasks = [];
 var divListTasksPending = document.getElementById("listTasksPending");
 var divListTaskDone = document.getElementById("listTasksDone");
 
-document.getElementById('formAddTask').addEventListener('submit', (e) => {e.preventDefault()})
 
 /** Llenado inicial de las tareas */
+loadTasks();
 refreshData();
-function refreshData() {
-  divListTasksPending.innerHTML = "";
-  divListTaskDone.innerHTML = "";
-  for(let task of allTasks) {
-    printTask(task);
-  }
-  updateTextCounterTaskPending();
-  updatePercentageTaskDone();
-}
 /******************************** */
 
 /**
  * All Events
  */
+function eventFormAddTask(input) {
+  input.addEventListener('submit', (e) => {e.preventDefault()})
+}
 
 function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
@@ -81,13 +75,11 @@ function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   });
 }
 
-function eventDeleteTask(task, btnDelete, articleTask) {
+function eventDeleteTask(task, btnDelete) {
   btnDelete.addEventListener('click', function(e) {
     deleteTask(task);
-    articleTask.remove();
-    // console.table(allTasks);
-    updateTextCounterTaskPending();
-    updatePercentageTaskDone();
+    refreshData();
+    showErrorMsg("Tarea eliminada.");
   })
 }
 
@@ -162,6 +154,7 @@ function eventCloseMenu(menuContainer) {
 function eventExportTasks(menuExportTasks) {
   menuExportTasks.addEventListener('click', function(e) {
     exportTastks();
+    showErrorMsg("Tareas exportadas correctamente.");
   })
 }
 
@@ -201,6 +194,7 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
     
           importTasks(tasks);
           fileInput.value = "";
+          
           refreshData();
           containerModal.click(); // Cierra el modal
           showErrorMsg("Tareas importadas correctamente.");
@@ -284,7 +278,6 @@ function exportTastks() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showErrorMsg("Tareas exportadas correctamente.");
 }
 
 function importTasks(tasks) {
@@ -324,6 +317,14 @@ function loadTasks() {
 /**
  * View
  */
+function refreshData() {
+  divListTasksPending.innerHTML = "";
+  divListTaskDone.innerHTML = "";
+  for(let task of allTasks) {
+    printTask(task);
+  }
+}
+
 function printTask(task) {
   if(task.delete) {
     return;
@@ -364,7 +365,7 @@ function printTask(task) {
   }
 
   eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
-  eventDeleteTask(task, btnDelete, articleTask);
+  eventDeleteTask(task, btnDelete);
   eventEditTask(task, pTask);
 
   updateTextCounterTaskPending();
@@ -395,6 +396,9 @@ eventSubmitImportTasks(formImportTasks, fileInput, containerModal);
 /**
  * Input add task
  */
+var formAddTask = document.getElementById('formAddTask');
+eventFormAddTask(formAddTask);
+
 var inputAddTask = document.querySelector('.field-add-task input');
 var btnAddTask = document.querySelector('.field-add-task button');
 eventSaveTask(inputAddTask, btnAddTask);
