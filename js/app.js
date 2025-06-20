@@ -47,21 +47,24 @@ class Task {
 // ]
 // listTasksDone.forEach(task => task.setDone());
 // var allTasks = listTasksPending.concat(listTasksDone);
-var allTasks = [];
-loadTasks();
 
+// * Variables Globales
+var allTasks = [];
 var divListTasksPending = document.getElementById("listTasksPending");
 var divListTaskDone = document.getElementById("listTasksDone");
 
-document.getElementById('formAddTask').addEventListener('submit', (e) => {e.preventDefault()})
 
 /** Llenado inicial de las tareas */
-for(let task of allTasks) {
-  printTask(task);
-}
-updateTextCounterTaskPending();
-updatePercentageTaskDone();
+loadTasks();
+refreshData();
 /******************************** */
+
+/**
+ * All Events
+ */
+function eventFormAddTask(input) {
+  input.addEventListener('submit', (e) => {e.preventDefault()})
+}
 
 function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
@@ -72,13 +75,11 @@ function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   });
 }
 
-function eventDeleteTask(task, btnDelete, articleTask) {
+function eventDeleteTask(task, btnDelete) {
   btnDelete.addEventListener('click', function(e) {
     deleteTask(task);
-    articleTask.remove();
-    // console.table(allTasks);
-    updateTextCounterTaskPending();
-    updatePercentageTaskDone();
+    refreshData();
+    showErrorMsg("Tarea eliminada.");
   })
 }
 
@@ -102,9 +103,7 @@ function eventEditTask(task, pTask) {
   })
 }
 
-
 function eventSaveTask(inputText, btnSaveTask) {
-
   inputText.addEventListener('keyup', function(e) {
     showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
   })
@@ -134,6 +133,78 @@ function eventClearText(btnClearText, inputText) {
   btnClearText.addEventListener('click', function(e) {
     inputText.value = "";
     showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
+  })
+}
+
+function eventShowMenu(menuIcon, menuContainer) {
+  menuIcon.addEventListener('click', function(e) {
+    menuContainer.classList.add('show');
+  })
+}
+
+function eventCloseMenu(menuContainer) {
+  menuContainer.addEventListener('click', function(e) {
+    // se oculta el menu si se hace click en el fondo o en una opción del menu
+    if (e.target === menuContainer || Array.from(menuContainer.querySelectorAll('ul li')).some(li => li === e.target || li.contains(e.target))) {
+      menuContainer.classList.remove('show');
+    }
+  })
+}
+
+function eventExportTasks(menuExportTasks) {
+  menuExportTasks.addEventListener('click', function(e) {
+    exportTastks();
+    showErrorMsg("Tareas exportadas correctamente.");
+  })
+}
+
+function eventShowModal(menuImportTasks, containerModal) {
+  menuImportTasks.addEventListener('click', function(e) {
+    containerModal.classList.add('show');
+  })
+}
+
+function eventCloseModal(containerModal) {
+  containerModal.addEventListener('click', function(e) {
+    if (e.target === containerModal || 
+        e.target.classList.contains('btn-close-modal') || 
+        e.target.parentElement.classList.contains('btn-close-modal') || 
+        e.target.parentElement.parentElement.classList.contains('btn-close-modal')) {
+      containerModal.classList.remove('show');
+    }
+  })
+}
+
+function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
+  formImportTasks.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var file = fileInput.files[0];
+    //validar el archivo
+    if (!file) {
+      showErrorMsg("Por favor, selecciona un archivo para importar.");
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var tasks = JSON.parse(e.target.result);
+          if (!Array.isArray(tasks)) {
+            throw new Error("El archivo no contiene un formato válido.");
+          }
+    
+          importTasks(tasks);
+          fileInput.value = "";
+          
+          refreshData();
+          containerModal.click(); // Cierra el modal
+          showErrorMsg("Tareas importadas correctamente.");
+
+        } catch (error) {
+          showErrorMsg("Error: " + error.message);
+        }
+      };
+      reader.readAsText(file);
+    }
   })
 }
 
@@ -196,6 +267,31 @@ function validateText(text) {
   return errorMsg;
 }
 
+function exportTastks() {
+  var data = JSON.stringify(allTasks, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'tasks.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importTasks(tasks) {
+  allTasks = tasks.map(task => {
+    var taskInstance = new Task(task.description);
+    taskInstance.id = task.id;
+    taskInstance.done = task.done;
+    taskInstance.delete = task.delete;
+    return taskInstance;
+  })
+  
+  persistTasks();
+}
+
 
 /**
  * Repository
@@ -221,6 +317,14 @@ function loadTasks() {
 /**
  * View
  */
+function refreshData() {
+  divListTasksPending.innerHTML = "";
+  divListTaskDone.innerHTML = "";
+  for(let task of allTasks) {
+    printTask(task);
+  }
+}
+
 function printTask(task) {
   if(task.delete) {
     return;
@@ -229,12 +333,12 @@ function printTask(task) {
   articleTask.classList.add('task');
   articleTask.id = task.id;
 
-  var pText = document.createElement('p');
-  pText.innerText = task.description;
+  var pTask = document.createElement('p');
+  pTask.innerText = task.description;
   if(task.done) {
-    pText.classList.add('completed');
+    pTask.classList.add('completed');
   } else {
-    pText.setAttribute('contenteditable', '');
+    pTask.setAttribute('contenteditable', '');
   }
 
   var btnDoneRestore = document.createElement('button');
@@ -250,7 +354,7 @@ function printTask(task) {
   btnDelete.classList.add('btn-delete');
   btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
   
-  articleTask.appendChild(pText);
+  articleTask.appendChild(pTask);
   articleTask.appendChild(btnDoneRestore);
   articleTask.appendChild(btnDelete);
 
@@ -261,16 +365,40 @@ function printTask(task) {
   }
 
   eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
-  eventDeleteTask(task, btnDelete, articleTask);
-  eventEditTask(task, pText);
+  eventDeleteTask(task, btnDelete);
+  eventEditTask(task, pTask);
 
   updateTextCounterTaskPending();
   updatePercentageTaskDone();
 }
 
 /**
+ * Menu
+ */
+var menuIcon = document.querySelector('.menu-icon');
+var menuContainer = document.querySelector('.menu-container');
+eventShowMenu(menuIcon, menuContainer);
+eventCloseMenu(menuContainer);
+
+var menuExportTasks = document.querySelector('.menu .export-tasks');
+eventExportTasks(menuExportTasks, menuContainer);
+
+var menuImportTasks = document.querySelector('.menu .import-tasks');
+var containerModal = document.querySelector('.container-modal');
+eventShowModal(menuImportTasks, containerModal);
+eventCloseModal(containerModal);
+
+var formImportTasks = document.getElementById('formImportTasks');
+var fileInput = document.getElementById('fileImport');
+eventSubmitImportTasks(formImportTasks, fileInput, containerModal);
+
+
+/**
  * Input add task
  */
+var formAddTask = document.getElementById('formAddTask');
+eventFormAddTask(formAddTask);
+
 var inputAddTask = document.querySelector('.field-add-task input');
 var btnAddTask = document.querySelector('.field-add-task button');
 eventSaveTask(inputAddTask, btnAddTask);
