@@ -21,6 +21,8 @@ Tiene un diseño simple y muy fácil de usar. Consta de cuatro secciones:
 - Restaurar tareas completadas a la sección de Tareas pendientes.
 - Eliminar tareas.
 - Circulo que indica el progreso de tareas realizadas.
+- Exportar tareas en formato JSON.
+- Importar tareas desde un archivo JSON
 
 > Queda pendiente la funcionalidad de recuperar tareas eliminadas.
 
