@@ -56,11 +56,16 @@ var divListTaskDone = document.getElementById("listTasksDone");
 document.getElementById('formAddTask').addEventListener('submit', (e) => {e.preventDefault()})
 
 /** Llenado inicial de las tareas */
-for(let task of allTasks) {
-  printTask(task);
+refreshData();
+function refreshData() {
+  divListTasksPending.innerHTML = "";
+  divListTaskDone.innerHTML = "";
+  for(let task of allTasks) {
+    printTask(task);
+  }
+  updateTextCounterTaskPending();
+  updatePercentageTaskDone();
 }
-updateTextCounterTaskPending();
-updatePercentageTaskDone();
 /******************************** */
 
 /**
@@ -177,6 +182,38 @@ function eventCloseModal(containerModal) {
   })
 }
 
+function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
+  formImportTasks.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var file = fileInput.files[0];
+    //validar el archivo
+    if (!file) {
+      showErrorMsg("Por favor, selecciona un archivo para importar.");
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var tasks = JSON.parse(e.target.result);
+          if (!Array.isArray(tasks)) {
+            throw new Error("El archivo no contiene un formato válido.");
+          }
+    
+          importTasks(tasks);
+          fileInput.value = "";
+          refreshData();
+          containerModal.click(); // Cierra el modal
+          showErrorMsg("Tareas importadas correctamente.");
+
+        } catch (error) {
+          showErrorMsg("Error: " + error.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  })
+}
+
 
 /**
  * Service
@@ -248,6 +285,18 @@ function exportTastks() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   showErrorMsg("Tareas exportadas correctamente.");
+}
+
+function importTasks(tasks) {
+  allTasks = tasks.map(task => {
+    var taskInstance = new Task(task.description);
+    taskInstance.id = task.id;
+    taskInstance.done = task.done;
+    taskInstance.delete = task.delete;
+    return taskInstance;
+  })
+  
+  persistTasks();
 }
 
 
@@ -337,6 +386,10 @@ var menuImportTasks = document.querySelector('.menu .import-tasks');
 var containerModal = document.querySelector('.container-modal');
 eventShowModal(menuImportTasks, containerModal);
 eventCloseModal(containerModal);
+
+var formImportTasks = document.getElementById('formImportTasks');
+var fileInput = document.getElementById('fileImport');
+eventSubmitImportTasks(formImportTasks, fileInput, containerModal);
 
 
 /**

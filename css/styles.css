@@ -75,6 +75,16 @@ li {
   visibility: visible !important;
 }
 
+.btn {
+  padding: 4px 24px;
+  font-family: Blinker;
+  font-size: 1.15rem;
+  outline: none;
+  border-radius: 0.3em;
+  cursor: pointer;
+  border: none;
+}
+
 .btn-outline {
   background-color: var(--color-surface-a10);
   border-color: var(--color-primary-m1);
@@ -353,6 +363,7 @@ li {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s ease-in-out;
+  z-index: 2000;
 }
 
 .alert.show {
@@ -531,14 +542,5 @@ a {
   justify-content: end;
 }
 
-.btn {
-  padding: 4px 24px;
-  font-family: Blinker;
-  font-size: 1.15rem;
-  outline: none;
-  border-radius: 0.3em;
-  cursor: pointer;
-  border: none;
-}
 
 
