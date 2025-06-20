@@ -22,7 +22,7 @@ class Task {
     this.done = !this.done;
   }
 
-  deleted() {
+  delete() {
     this.delete = true;
   }
 
@@ -70,8 +70,7 @@ function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
     task = toggleDoneTask(task);
     articleTask.remove();
-    printTask(task);
-    // console.table(allTasks);
+    refreshData();
   });
 }
 
@@ -79,7 +78,7 @@ function eventDeleteTask(task, btnDelete) {
   btnDelete.addEventListener('click', function(e) {
     deleteTask(task);
     refreshData();
-    showErrorMsg("Tarea eliminada.");
+    showAlertMsg("Tarea eliminada.");
   })
 }
 
@@ -87,7 +86,7 @@ function eventEditTask(task, pTask) {
   pTask.addEventListener('blur', function(e) {
     var newDescription = pTask.innerText.trim();
     if ( msg = validateText(newDescription)) {
-      showErrorMsg(msg);
+      showAlertMsg(msg);
       pTask.innerText = task.description;
     } else {
       editTask(task, newDescription);
@@ -118,10 +117,10 @@ function eventSaveTask(inputText, btnSaveTask) {
     // Validation
     var text = inputText.value.trim();
     if ( msg = validateText(text)) {
-      showErrorMsg(msg);
+      showAlertMsg(msg);
     } else {
       var task = addTask(text);
-      printTask(task);
+      refreshData();
       inputText.value = "";
       inputText.blur();
     }
@@ -154,7 +153,7 @@ function eventCloseMenu(menuContainer) {
 function eventExportTasks(menuExportTasks) {
   menuExportTasks.addEventListener('click', function(e) {
     exportTastks();
-    showErrorMsg("Tareas exportadas correctamente.");
+    showAlertMsg("Tareas exportadas correctamente.");
   })
 }
 
@@ -182,7 +181,7 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
     var file = fileInput.files[0];
     //validar el archivo
     if (!file) {
-      showErrorMsg("Por favor, selecciona un archivo para importar.");
+      showAlertMsg("Por favor, selecciona un archivo para importar.");
     } else {
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -197,10 +196,10 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
           
           refreshData();
           containerModal.click(); // Cierra el modal
-          showErrorMsg("Tareas importadas correctamente.");
+          showAlertMsg("Tareas importadas correctamente.");
 
         } catch (error) {
-          showErrorMsg("Error: " + error.message);
+          showAlertMsg("Error: " + error.message);
         }
       };
       reader.readAsText(file);
@@ -217,7 +216,7 @@ function findTask(id) {
 }
 
 function deleteTask(task) {
-  task.deleted();
+  task.delete();
   persistTasks();
 }
 
@@ -323,6 +322,8 @@ function refreshData() {
   for(let task of allTasks) {
     printTask(task);
   }
+  updateTextCounterTaskPending();
+  updatePercentageTaskDone();
 }
 
 function printTask(task) {
@@ -368,8 +369,6 @@ function printTask(task) {
   eventDeleteTask(task, btnDelete);
   eventEditTask(task, pTask);
 
-  updateTextCounterTaskPending();
-  updatePercentageTaskDone();
 }
 
 /**
@@ -405,6 +404,22 @@ eventSaveTask(inputAddTask, btnAddTask);
 
 var btnClearText = document.querySelector('.field-add-task svg');
 eventClearText(btnClearText, inputAddTask);
+
+function showOrHiddenBtnClearAndBtnSaveTask(text) {
+  var btnClearText = document.querySelector('.field-add-task svg');
+  var btnSaveTask = document.querySelector('.field-add-task button');
+  if(text.length > 0) {
+    btnClearText.classList.add('show-element')
+    btnSaveTask.classList.add('show-element');
+  } else {
+    btnClearText.classList.remove('show-element')
+    btnSaveTask.classList.remove('show-element');
+  }
+}
+
+/**
+ * Update counter pending tasks and percentage 
+ */
 
 function updateTextCounterTaskPending() {
   var textCounter = document.querySelector('.summary-info-text strong');
@@ -446,7 +461,7 @@ function updatePercentageTaskDone() {
  */
 var alertBox = document.querySelector('.alert')
 var alertText = document.querySelector('.alert p');
-function showErrorMsg(msg) {
+function showAlertMsg(msg) {
   alertBox.classList.add('show')
   alertText.innerText = msg;
   setTimeout(() => {
@@ -454,17 +469,7 @@ function showErrorMsg(msg) {
   }, 4000);
 }
 
-function showOrHiddenBtnClearAndBtnSaveTask(text) {
-  var btnClearText = document.querySelector('.field-add-task svg');
-  var btnSaveTask = document.querySelector('.field-add-task button');
-  if(text.length > 0) {
-    btnClearText.classList.add('show-element')
-    btnSaveTask.classList.add('show-element');
-  } else {
-    btnClearText.classList.remove('show-element')
-    btnSaveTask.classList.remove('show-element');
-  }
-}
+
 
 /**
  * Show modal new task
