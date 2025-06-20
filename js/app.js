@@ -63,6 +63,10 @@ updateTextCounterTaskPending();
 updatePercentageTaskDone();
 /******************************** */
 
+/**
+ * All Events
+ */
+
 function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
     task = toggleDoneTask(task);
@@ -103,7 +107,6 @@ function eventEditTask(task, pTask) {
 }
 
 function eventSaveTask(inputText, btnSaveTask) {
-
   inputText.addEventListener('keyup', function(e) {
     showOrHiddenBtnClearAndBtnSaveTask(inputText.value.trim())
   })
@@ -144,21 +147,33 @@ function eventShowMenu(menuIcon, menuContainer) {
 
 function eventCloseMenu(menuContainer) {
   menuContainer.addEventListener('click', function(e) {
-    menuContainer.classList.remove('show');
-  })
-
-  // Evitar que el evento click se propague a los hijos del menú
-  menuContainer.childNodes.forEach(node => {
-    node.addEventListener('click', function(e) {
-      e.stopPropagation();
-    })
+    // se oculta el menu si se hace click en el fondo o en una opción del menu
+    if (e.target === menuContainer || Array.from(menuContainer.querySelectorAll('ul li')).some(li => li === e.target || li.contains(e.target))) {
+      menuContainer.classList.remove('show');
+    }
   })
 }
 
-function eventExportTasks(menuExportTasks, menuContainer) {
+function eventExportTasks(menuExportTasks) {
   menuExportTasks.addEventListener('click', function(e) {
     exportTastks();
-    menuContainer.click(); // Cierra el menú
+  })
+}
+
+function eventShowModal(menuImportTasks, containerModal) {
+  menuImportTasks.addEventListener('click', function(e) {
+    containerModal.classList.add('show');
+  })
+}
+
+function eventCloseModal(containerModal) {
+  containerModal.addEventListener('click', function(e) {
+    if (e.target === containerModal || 
+        e.target.classList.contains('btn-close-modal') || 
+        e.target.parentElement.classList.contains('btn-close-modal') || 
+        e.target.parentElement.parentElement.classList.contains('btn-close-modal')) {
+      containerModal.classList.remove('show');
+    }
   })
 }
 
@@ -317,6 +332,13 @@ eventCloseMenu(menuContainer);
 
 var menuExportTasks = document.querySelector('.menu .export-tasks');
 eventExportTasks(menuExportTasks, menuContainer);
+
+var menuImportTasks = document.querySelector('.menu .import-tasks');
+var containerModal = document.querySelector('.container-modal');
+eventShowModal(menuImportTasks, containerModal);
+eventCloseModal(containerModal);
+
+
 /**
  * Input add task
  */
