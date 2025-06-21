@@ -110,11 +110,24 @@ function eventEditTask(task, pTask) {
 function eventRestoreFromTrash(task, aRestoreTask) {
   aRestoreTask.addEventListener('click', function(e) {
     e.preventDefault();
-    task = undeleteTask(task);
+    undeleteTask(task);
     refreshData();
     showAlertMsg("Tarea restaurada.");
   })
 }
+
+function eventDeleteTaskPermanently(task, btnDeletePermanent) {
+  btnDeletePermanent.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    if (confirm("¿Estás seguro de que deseas eliminar esta tarea permanentemente?")) {
+      deleteTaskPermanently(task);
+      refreshData();
+      showAlertMsg("Tarea eliminada permanentemente.");
+    }
+  });
+}
+
 
 function eventSaveTask(inputText, btnSaveTask) {
   inputText.addEventListener('keyup', function(e) {
@@ -222,6 +235,7 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
 }
 
 
+
 /**
  * Service
  */
@@ -262,6 +276,11 @@ function undeleteTask(task) {
   bringTaskToStart(task);  
   persistTasks();
   return task;
+}
+
+function deleteTaskPermanently(task) {
+  allTasks = allTasks.filter(t => t.id !== task.id);
+  persistTasks();
 }
 
 function bringTaskToStart(task) {
@@ -375,12 +394,18 @@ function printDeletedTasks(task) {
   aRestoreTask.href = "#";
   aRestoreTask.innerText = "Restaurar";
 
+  var btnDeletePermanent = document.createElement("a");
+  btnDeletePermanent.href = "#";
+  btnDeletePermanent.classList.add("color-primary-m-1", "btn-delete-permanent");
+  btnDeletePermanent.innerText = "Eliminar";
+
   articleTask.appendChild(pTask);
   articleTask.appendChild(aRestoreTask);
-
+  articleTask.appendChild(btnDeletePermanent);
   divListDeletedTasks.appendChild(articleTask);
 
   eventRestoreFromTrash(task, aRestoreTask);
+  eventDeleteTaskPermanently(task, btnDeletePermanent)
 }
 
 function printTask(task) {
