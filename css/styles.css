@@ -301,8 +301,8 @@ li {
   flex-grow: 1;
   padding: 8px 10px;
   min-height: 2.43rem;
-  max-width: calc(100% - 5.86rem);
-  overflow-wrap: break-word;
+  /* max-width: calc(100% - 5.86rem); */
+  overflow-wrap: anywhere;
 }
 .task p:focus {
   outline: none;
@@ -329,7 +329,6 @@ li {
 .task .btn-delete {
   background-color: var(--color-surface-a20);
   border: none;
-  color: rgb(179, 8, 8);
 }
 .task .btn-delete:hover {
   border: solid 1px var(--color-primary-m-1)

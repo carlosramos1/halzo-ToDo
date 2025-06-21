@@ -22,7 +22,7 @@ class Task {
     this.done = !this.done;
   }
 
-  delete() {
+  remove() {
     this.delete = true;
   }
 
@@ -52,6 +52,7 @@ class Task {
 var allTasks = [];
 var divListTasksPending = document.getElementById("listTasksPending");
 var divListTaskDone = document.getElementById("listTasksDone");
+var divListDeletedTasks = document.getElementById("listDeletedTasks");
 
 
 /** Llenado inicial de las tareas */
@@ -216,7 +217,7 @@ function findTask(id) {
 }
 
 function deleteTask(task) {
-  task.delete();
+  task.remove();
   persistTasks();
 }
 
@@ -319,6 +320,7 @@ function loadTasks() {
 function refreshData() {
   divListTasksPending.innerHTML = "";
   divListTaskDone.innerHTML = "";
+  divListDeletedTasks.innerHTML = "";
   for(let task of allTasks) {
     printTask(task);
   }
@@ -326,8 +328,23 @@ function refreshData() {
   updatePercentageTaskDone();
 }
 
+function printDeletedTasks(task) {
+  var articleTask = document.createElement('article');
+  articleTask.classList.add('task');
+  articleTask.id = task.id;
+  var pTask = document.createElement('p');
+  pTask.innerText = task.description;
+  var aRestoreTask = document.createElement('a');
+  aRestoreTask.href = "#";
+  aRestoreTask.innerText = "Restaurar";
+  articleTask.appendChild(pTask);
+  articleTask.appendChild(aRestoreTask);
+  divListDeletedTasks.appendChild(articleTask);
+}
+
 function printTask(task) {
   if(task.delete) {
+    printDeletedTasks(task);
     return;
   }
   var articleTask = document.createElement('article');
