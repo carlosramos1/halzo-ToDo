@@ -26,7 +26,7 @@ class Task {
     this.delete = true;
   }
 
-  restore() {
+  undelete() {
     this.delete = false;
   }
 
@@ -110,8 +110,8 @@ function eventEditTask(task, pTask) {
 function eventRestoreFromTrash(task, aRestoreTask) {
   aRestoreTask.addEventListener('click', function(e) {
     e.preventDefault();
-    task = retoreTask(task);
-    refreshData();  // Cambier para que la tarea restaurada se muestre primero
+    task = undeleteTask(task);
+    refreshData();
     showAlertMsg("Tarea restaurada.");
   })
 }
@@ -231,12 +231,13 @@ function findTask(id) {
 
 function deleteTask(task) {
   task.remove();
+  bringTaskToEnd(task);
   persistTasks();
 }
 
 function addTask(description) {
   var task = new Task(description);
-  allTasks.push(task);
+  allTasks.unshift(task);
   persistTasks();
   return task;
 }
@@ -250,15 +251,29 @@ function editTask(task, newDescription) {
 
 function toggleDoneTask(task) {
   task.toggleDone();
+  bringTaskToEnd(task);
   persistTasks();
   return task;
 }
 
-function retoreTask(task) {
-  task.restore();
+function undeleteTask(task) {
+  task.undelete();
   task.setPending();
+  bringTaskToStart(task);  
   persistTasks();
   return task;
+}
+
+function bringTaskToStart(task) {
+  var idx = allTasks.indexOf(task);
+  allTasks.splice(idx, 1);
+  allTasks.unshift(task);
+}
+
+function bringTaskToEnd(task) {
+  var idx = allTasks.indexOf(task);
+  allTasks.splice(idx, 1);
+  allTasks.push(task);
 }
 
 function countTaskPendient() {
@@ -359,7 +374,7 @@ function printDeletedTasks(task) {
   var aRestoreTask = document.createElement('a');
   aRestoreTask.href = "#";
   aRestoreTask.innerText = "Restaurar";
-  
+
   articleTask.appendChild(pTask);
   articleTask.appendChild(aRestoreTask);
 
