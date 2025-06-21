@@ -284,37 +284,33 @@ li {
   visibility: hidden;
 }
 
-.pending-tasks, .completed-tasks {
+.pending-tasks, .completed-tasks, .deleted-tasks {
   margin: 8px auto;
 }
 
 .task {
+  margin: 12px 0;
   display: flex;
-  flex-wrap: wrap;
-  margin: 12px auto;
+  align-items: flex-start;
+  column-gap: 6px;
 }
 
 .task p {
   background-color: var(--color-surface-a20);
   border-radius: 6px;
-  /* flex-grow: 1; */
+  flex-grow: 1;
   padding: 8px 10px;
   min-height: 2.43rem;
-  width: calc(100% - 5.46rem);
-  overflow-wrap: break-word;
+  /* max-width: calc(100% - 5.86rem); */
+  overflow-wrap: anywhere;
 }
 .task p:focus {
   outline: none;
   border: solid 1px var(--color-primary-m1);
 }
 
-.task small {
-  font-weight: 300;
-  color: var(--color-primary-m1);
-  /* position: absolute; */
-}
-
 .task button {
+  flex-shrink: 0;
   width: 2.43rem;
   height: 2.43rem;
   border: none;
@@ -323,7 +319,6 @@ li {
 }
 
 .task .btn-done, .task .btn-restore {
-  margin: 0 0.3rem;
   background-color: var(--color-primary-m1);
   color: white;
 }
@@ -334,11 +329,13 @@ li {
 .task .btn-delete {
   background-color: var(--color-surface-a20);
   border: none;
-  color: rgb(179, 8, 8);
 }
 .task .btn-delete:hover {
   border: solid 1px var(--color-primary-m-1)
-  /* background-color: rgb(179, 8, 8, .2); */
+}
+
+.task a {
+  flex-shrink: 0;
 }
 
 @keyframes slideDown {
@@ -471,7 +468,7 @@ a {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 350px;
+  /* height: 350px; */
   background-color: var(--color-surface-a10);
   visibility: hidden;
 }
@@ -505,6 +502,8 @@ a {
   position: relative;
   width: 100%;
   padding: 22px;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
 }
 
 .modal-body .form-group {

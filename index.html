@@ -24,11 +24,6 @@
       <p class="menu-title">Menú</p>
       <ul>
         <li>
-          <a href="#" class="trash-tasks">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
-            Tareas eliminadas</a>
-        </li>
-        <li>
           <a href="#" class="export-tasks">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M400-280h160v-80H400v80Zm0-160h280v-80H400v80ZM280-600h400v-80H280v80Zm200 120ZM80-80v-80h102q-48-23-77.5-68T75-330q0-79 55.5-134.5T265-520v80q-45 0-77.5 32T155-330q0 39 24 69t61 38v-97h80v240H80Zm320-40v-80h360v-560H200v160h-80v-160q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H400Z"/></svg>
             Exportar tareas</a>
@@ -37,6 +32,11 @@
           <a href="#" class="import-tasks">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M400-280h160v-80H400v80Zm0-160h280v-80H400v80ZM280-600h400v-80H280v80Zm200 120ZM265-80q-79 0-134.5-55.5T75-270q0-57 29.5-102t77.5-68H80v-80h240v240h-80v-97q-37 8-61 38t-24 69q0 46 32.5 78t77.5 32v80Zm135-40v-80h360v-560H200v160h-80v-160q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H400Z"/></svg> 
             Importar tareas</a>
+        </li>
+        <li>
+          <a href="#" class="trash-tasks">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+            Tareas eliminadas</a>
         </li>
       </ul>
       <p class="menu-footer">
@@ -130,8 +130,8 @@
 
 
     <!-- modal add task -->
-  <div class="container-modal">
-    <div class="modal" id="modalAddTask">
+  <div class="container-modal" id="containerModalImport">
+    <div class="modal">
       <div class="modal-header">
         <p>Importar tareas</p>
         <span class="btn-close-modal">
@@ -145,11 +145,33 @@
             <input type="file" id="fileImport" accept=".json">
           </div>
           <div class="modal-buttons">
-            <!-- <button class="btn-cancel">Cancelar</button> -->
             <small>¡ATENCIÓN! Esta acción borrará las tareas actuales y las reemplazará por las tares del archivo JSON</small>
             <button type="submit" class="btn btn-primary">Importar</button>
           </div>
         </form>
+     </div>
+    </div>
+  </div>
+
+  <!-- modal restore deleted task -->
+  <div class="container-modal" id="containerModalTrashTasks">
+    <div class="modal">
+      <div class="modal-header">
+        <p>Tareas eliminadas</p>
+        <span class="btn-close-modal">
+          <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="#79777e"><path d="m291-240-51-51 189-189-189-189 51-51 189 189 189-189 51 51-189 189 189 189-51 51-189-189-189 189Z"/></svg>
+        </span>
+      </div>
+      <div class="modal-body">
+        <section class="deleted-tasks">
+          <div id="listDeletedTasks">
+            <!-- <article class="task">
+              <p class="task-deleted">Comprar leche y galletas</p>
+              <a href="#">Restaurar</a> -->
+              <!-- <a href="#" class="color-primary-m-1">Eliminar</a> -->
+            <!-- </article> -->
+          </div>
+        </section>
      </div>
     </div>
   </div>

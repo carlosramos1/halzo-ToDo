@@ -22,8 +22,12 @@ class Task {
     this.done = !this.done;
   }
 
-  deleted() {
+  remove() {
     this.delete = true;
+  }
+
+  undelete() {
+    this.delete = false;
   }
 
   isDeleted() {
@@ -50,8 +54,6 @@ class Task {
 
 // * Variables Globales
 var allTasks = [];
-var divListTasksPending = document.getElementById("listTasksPending");
-var divListTaskDone = document.getElementById("listTasksDone");
 
 
 /** Llenado inicial de las tareas */
@@ -70,8 +72,7 @@ function eventDoneOrRestoreTask (task, btnDoneRestore, articleTask) {
   btnDoneRestore.addEventListener('click', function(e) {
     task = toggleDoneTask(task);
     articleTask.remove();
-    printTask(task);
-    // console.table(allTasks);
+    refreshData();
   });
 }
 
@@ -79,7 +80,7 @@ function eventDeleteTask(task, btnDelete) {
   btnDelete.addEventListener('click', function(e) {
     deleteTask(task);
     refreshData();
-    showErrorMsg("Tarea eliminada.");
+    showAlertMsg("Tarea eliminada.");
   })
 }
 
@@ -87,7 +88,7 @@ function eventEditTask(task, pTask) {
   pTask.addEventListener('blur', function(e) {
     var newDescription = pTask.innerText.trim();
     if ( msg = validateText(newDescription)) {
-      showErrorMsg(msg);
+      showAlertMsg(msg);
       pTask.innerText = task.description;
     } else {
       editTask(task, newDescription);
@@ -102,6 +103,31 @@ function eventEditTask(task, pTask) {
     }
   })
 }
+
+function eventRestoreFromTrash(task, aRestoreTask) {
+  aRestoreTask.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    undeleteTask(task);
+    refreshData();
+    showAlertMsg("Tarea restaurada.");
+  })
+}
+
+function eventDeleteTaskPermanently(task, btnDeletePermanent) {
+  btnDeletePermanent.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (confirm("¿Estás seguro de que deseas eliminar esta tarea permanentemente?")) {
+      deleteTaskPermanently(task);
+      refreshData();
+      showAlertMsg("Tarea eliminada permanentemente.");
+    }
+  });
+}
+
 
 function eventSaveTask(inputText, btnSaveTask) {
   inputText.addEventListener('keyup', function(e) {
@@ -118,10 +144,10 @@ function eventSaveTask(inputText, btnSaveTask) {
     // Validation
     var text = inputText.value.trim();
     if ( msg = validateText(text)) {
-      showErrorMsg(msg);
+      showAlertMsg(msg);
     } else {
       var task = addTask(text);
-      printTask(task);
+      refreshData();
       inputText.value = "";
       inputText.blur();
     }
@@ -154,12 +180,12 @@ function eventCloseMenu(menuContainer) {
 function eventExportTasks(menuExportTasks) {
   menuExportTasks.addEventListener('click', function(e) {
     exportTastks();
-    showErrorMsg("Tareas exportadas correctamente.");
+    showAlertMsg("Tareas exportadas correctamente.");
   })
 }
 
-function eventShowModal(menuImportTasks, containerModal) {
-  menuImportTasks.addEventListener('click', function(e) {
+function eventShowModal(tagClickable, containerModal) {
+  tagClickable.addEventListener('click', function(e) {
     containerModal.classList.add('show');
   })
 }
@@ -182,7 +208,7 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
     var file = fileInput.files[0];
     //validar el archivo
     if (!file) {
-      showErrorMsg("Por favor, selecciona un archivo para importar.");
+      showAlertMsg("Por favor, selecciona un archivo para importar.");
     } else {
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -197,16 +223,17 @@ function eventSubmitImportTasks(formImportTasks, fileInput, containerModal) {
           
           refreshData();
           containerModal.click(); // Cierra el modal
-          showErrorMsg("Tareas importadas correctamente.");
+          showAlertMsg("Tareas importadas correctamente.");
 
         } catch (error) {
-          showErrorMsg("Error: " + error.message);
+          showAlertMsg("Error: " + error.message);
         }
       };
       reader.readAsText(file);
     }
   })
 }
+
 
 
 /**
@@ -217,13 +244,14 @@ function findTask(id) {
 }
 
 function deleteTask(task) {
-  task.deleted();
+  task.remove();
+  bringTaskToEnd(task);
   persistTasks();
 }
 
 function addTask(description) {
   var task = new Task(description);
-  allTasks.push(task);
+  allTasks.unshift(task);
   persistTasks();
   return task;
 }
@@ -237,8 +265,34 @@ function editTask(task, newDescription) {
 
 function toggleDoneTask(task) {
   task.toggleDone();
+  bringTaskToEnd(task);
   persistTasks();
   return task;
+}
+
+function undeleteTask(task) {
+  task.undelete();
+  task.setPending();
+  bringTaskToStart(task);  
+  persistTasks();
+  return task;
+}
+
+function deleteTaskPermanently(task) {
+  allTasks = allTasks.filter(t => t.id !== task.id);
+  persistTasks();
+}
+
+function bringTaskToStart(task) {
+  var idx = allTasks.indexOf(task);
+  allTasks.splice(idx, 1);
+  allTasks.unshift(task);
+}
+
+function bringTaskToEnd(task) {
+  var idx = allTasks.indexOf(task);
+  allTasks.splice(idx, 1);
+  allTasks.push(task);
 }
 
 function countTaskPendient() {
@@ -318,59 +372,109 @@ function loadTasks() {
  * View
  */
 function refreshData() {
-  divListTasksPending.innerHTML = "";
-  divListTaskDone.innerHTML = "";
-  for(let task of allTasks) {
-    printTask(task);
-  }
-}
-
-function printTask(task) {
-  if(task.delete) {
-    return;
-  }
-  var articleTask = document.createElement('article');
-  articleTask.classList.add('task');
-  articleTask.id = task.id;
-
-  var pTask = document.createElement('p');
-  pTask.innerText = task.description;
-  if(task.done) {
-    pTask.classList.add('completed');
-  } else {
-    pTask.setAttribute('contenteditable', '');
-  }
-
-  var btnDoneRestore = document.createElement('button');
-  if(task.done) {
-    btnDoneRestore.classList.add('btn-restore');
-    btnDoneRestore.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fb713b"><path d="M480-80q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-440h80q0 117 81.5 198.5T480-160q117 0 198.5-81.5T760-440q0-117-81.5-198.5T480-720h-6l62 62-56 58-160-160 160-160 56 58-62 62h6q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-440q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-80Z"/></svg>'
-  } else {
-    btnDoneRestore.classList.add('btn-done');
-    btnDoneRestore.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q65 0 123 19t107 53l-58 59q-38-24-81-37.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-18-2-36t-6-35l65-65q11 32 17 66t6 70q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-56-216L254-466l56-56 114 114 400-401 56 56-456 457Z"/></svg>'
-  }
-
-  var btnDelete = document.createElement('button');
-  btnDelete.classList.add('btn-delete');
-  btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
-  
-  articleTask.appendChild(pTask);
-  articleTask.appendChild(btnDoneRestore);
-  articleTask.appendChild(btnDelete);
-
-  if(task.done) {
-    divListTaskDone.appendChild(articleTask);
-  } else {
-    divListTasksPending.appendChild(articleTask);
-  }
-
-  eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
-  eventDeleteTask(task, btnDelete);
-  eventEditTask(task, pTask);
+  renderPendingTasks();
+  renderCompletedTasks();
+  renderDeletedTasks();
 
   updateTextCounterTaskPending();
   updatePercentageTaskDone();
 }
+
+function renderPendingTasks() {
+  var divListTasksPending = document.getElementById("listTasksPending");
+  divListTasksPending.innerHTML = "";
+
+  allTasks.filter(task => !task.done && !task.delete).forEach(task => {
+    var articleTask = document.createElement('article');
+    articleTask.classList.add('task');
+    articleTask.id = task.id;
+
+    var pTask = document.createElement('p');
+    pTask.innerText = task.description;
+    pTask.setAttribute('contenteditable', '');
+
+    var btnDoneRestore = document.createElement('button');
+    btnDoneRestore.classList.add('btn-done');
+    btnDoneRestore.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q65 0 123 19t107 53l-58 59q-38-24-81-37.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-18-2-36t-6-35l65-65q11 32 17 66t6 70q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-56-216L254-466l56-56 114 114 400-401 56 56-456 457Z"/></svg>'
+    
+    var btnDelete = document.createElement('button');
+    btnDelete.classList.add('btn-delete');
+    btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
+    
+    articleTask.appendChild(pTask);
+    articleTask.appendChild(btnDoneRestore);
+    articleTask.appendChild(btnDelete);
+    divListTasksPending.appendChild(articleTask);
+
+    eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
+    eventDeleteTask(task, btnDelete);
+    eventEditTask(task, pTask);  
+  });
+}
+
+function renderCompletedTasks() {
+  var divListTaskDone = document.getElementById("listTasksDone");
+  divListTaskDone.innerHTML = "";
+
+  allTasks.filter(task => task.done && !task.delete).forEach(task => {
+    var articleTask = document.createElement('article');
+    articleTask.classList.add('task');
+    articleTask.id = task.id;
+
+    var pTask = document.createElement('p');
+    pTask.innerText = task.description;
+    pTask.classList.add('completed');
+
+    var btnDoneRestore = document.createElement('button');
+    btnDoneRestore.classList.add('btn-restore');
+    btnDoneRestore.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fb713b"><path d="M480-80q-75 0-140.5-28.5t-114-77q-48.5-48.5-77-114T120-440h80q0 117 81.5 198.5T480-160q117 0 198.5-81.5T760-440q0-117-81.5-198.5T480-720h-6l62 62-56 58-160-160 160-160 56 58-62 62h6q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-440q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-80Z"/></svg>'
+
+    var btnDelete = document.createElement('button');
+    btnDelete.classList.add('btn-delete');
+    btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
+    
+    articleTask.appendChild(pTask);
+    articleTask.appendChild(btnDoneRestore);
+    articleTask.appendChild(btnDelete);
+    divListTaskDone.appendChild(articleTask);
+
+    eventDoneOrRestoreTask(task, btnDoneRestore, articleTask);
+    eventDeleteTask(task, btnDelete);
+  })
+}
+
+function renderDeletedTasks() {
+  var divListDeletedTasks = document.getElementById("listDeletedTasks");
+  divListDeletedTasks.innerHTML = "";
+
+  allTasks.filter(task => task.delete).forEach(task => {
+    var articleTask = document.createElement('article');
+    articleTask.classList.add('task');
+    articleTask.id = task.id;
+  
+    var pTask = document.createElement('p');
+    pTask.innerText = task.description;
+  
+    var aRestoreTask = document.createElement('a');
+    aRestoreTask.href = "#";
+    aRestoreTask.innerText = "Restaurar";
+  
+    var btnDeletePermanent = document.createElement("a");
+    btnDeletePermanent.href = "#";
+    btnDeletePermanent.classList.add("color-primary-m-1", "btn-delete-permanent");
+    btnDeletePermanent.innerText = "Eliminar";
+  
+    articleTask.appendChild(pTask);
+    articleTask.appendChild(aRestoreTask);
+    articleTask.appendChild(btnDeletePermanent);
+    divListDeletedTasks.appendChild(articleTask);
+  
+    eventRestoreFromTrash(task, aRestoreTask);
+    eventDeleteTaskPermanently(task, btnDeletePermanent)
+  })
+}
+
+
 
 /**
  * Menu
@@ -383,15 +487,21 @@ eventCloseMenu(menuContainer);
 var menuExportTasks = document.querySelector('.menu .export-tasks');
 eventExportTasks(menuExportTasks, menuContainer);
 
+/* Modal Import Tasks */
 var menuImportTasks = document.querySelector('.menu .import-tasks');
-var containerModal = document.querySelector('.container-modal');
-eventShowModal(menuImportTasks, containerModal);
-eventCloseModal(containerModal);
+var containerModalImport = document.getElementById('containerModalImport');
+eventShowModal(menuImportTasks, containerModalImport);
+eventCloseModal(containerModalImport);
 
 var formImportTasks = document.getElementById('formImportTasks');
 var fileInput = document.getElementById('fileImport');
-eventSubmitImportTasks(formImportTasks, fileInput, containerModal);
+eventSubmitImportTasks(formImportTasks, fileInput, containerModalImport);
 
+/* Modal Trash Tasks */
+var menuDeletedTasks = document.querySelector('.menu .trash-tasks')
+var containerModalTrashTasks = document.getElementById('containerModalTrashTasks')
+eventShowModal(menuDeletedTasks, containerModalTrashTasks);
+eventCloseModal(containerModalTrashTasks)
 
 /**
  * Input add task
@@ -405,6 +515,22 @@ eventSaveTask(inputAddTask, btnAddTask);
 
 var btnClearText = document.querySelector('.field-add-task svg');
 eventClearText(btnClearText, inputAddTask);
+
+function showOrHiddenBtnClearAndBtnSaveTask(text) {
+  var btnClearText = document.querySelector('.field-add-task svg');
+  var btnSaveTask = document.querySelector('.field-add-task button');
+  if(text.length > 0) {
+    btnClearText.classList.add('show-element')
+    btnSaveTask.classList.add('show-element');
+  } else {
+    btnClearText.classList.remove('show-element')
+    btnSaveTask.classList.remove('show-element');
+  }
+}
+
+/**
+ * Update counter pending tasks and percentage 
+ */
 
 function updateTextCounterTaskPending() {
   var textCounter = document.querySelector('.summary-info-text strong');
@@ -446,7 +572,7 @@ function updatePercentageTaskDone() {
  */
 var alertBox = document.querySelector('.alert')
 var alertText = document.querySelector('.alert p');
-function showErrorMsg(msg) {
+function showAlertMsg(msg) {
   alertBox.classList.add('show')
   alertText.innerText = msg;
   setTimeout(() => {
@@ -454,17 +580,7 @@ function showErrorMsg(msg) {
   }, 4000);
 }
 
-function showOrHiddenBtnClearAndBtnSaveTask(text) {
-  var btnClearText = document.querySelector('.field-add-task svg');
-  var btnSaveTask = document.querySelector('.field-add-task button');
-  if(text.length > 0) {
-    btnClearText.classList.add('show-element')
-    btnSaveTask.classList.add('show-element');
-  } else {
-    btnClearText.classList.remove('show-element')
-    btnSaveTask.classList.remove('show-element');
-  }
-}
+
 
 /**
  * Show modal new task
