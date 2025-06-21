@@ -157,8 +157,8 @@ function eventExportTasks(menuExportTasks) {
   })
 }
 
-function eventShowModal(menuImportTasks, containerModal) {
-  menuImportTasks.addEventListener('click', function(e) {
+function eventShowModal(tagClickable, containerModal) {
+  tagClickable.addEventListener('click', function(e) {
     containerModal.classList.add('show');
   })
 }
@@ -382,15 +382,21 @@ eventCloseMenu(menuContainer);
 var menuExportTasks = document.querySelector('.menu .export-tasks');
 eventExportTasks(menuExportTasks, menuContainer);
 
+/* Modal Import Tasks */
 var menuImportTasks = document.querySelector('.menu .import-tasks');
-var containerModal = document.querySelector('.container-modal');
-eventShowModal(menuImportTasks, containerModal);
-eventCloseModal(containerModal);
+var containerModalImport = document.getElementById('containerModalImport');
+eventShowModal(menuImportTasks, containerModalImport);
+eventCloseModal(containerModalImport);
 
 var formImportTasks = document.getElementById('formImportTasks');
 var fileInput = document.getElementById('fileImport');
-eventSubmitImportTasks(formImportTasks, fileInput, containerModal);
+eventSubmitImportTasks(formImportTasks, fileInput, containerModalImport);
 
+/* Modal Trash Tasks */
+var menuDeletedTasks = document.querySelector('.menu .trash-tasks')
+var containerModalTrashTasks = document.getElementById('containerModalTrashTasks')
+eventShowModal(menuDeletedTasks, containerModalTrashTasks);
+eventCloseModal(containerModalTrashTasks)
 
 /**
  * Input add task
