@@ -295,6 +295,63 @@ function bringTaskToEnd(task) {
   allTasks.push(task);
 }
 
+function reorderTask(draggedTaskId, targetTaskId) {
+  const draggedTask = findTask(draggedTaskId);
+  // Solo reordenar tareas pendientes válidas
+  if (!draggedTask || draggedTask.done || draggedTask.delete) {
+    console.warn("Attempted to reorder a non-pending or invalid task.");
+    return;
+  }
+
+  const draggedTaskIndex = allTasks.indexOf(draggedTask);
+  if (draggedTaskIndex === -1) {
+    console.warn("Dragged task not found in allTasks array.");
+    return;
+  }
+
+  // Eliminar la tarea de su posición original
+  allTasks.splice(draggedTaskIndex, 1);
+
+  if (targetTaskId) {
+    const targetTask = findTask(targetTaskId);
+
+    // Asegurarse que la tarea destino también sea una tarea pendiente visible y válida
+    if (!targetTask || targetTask.done || targetTask.delete) {
+        // Si la tarea destino no es válida (ej. se intentó soltar sobre una tarea ya completada o eliminada, o no se encontró)
+        // Se coloca al final de las tareas pendientes visibles.
+        let firstNonPendingIndex = allTasks.findIndex(t => t.done || t.delete);
+        if (firstNonPendingIndex === -1) { // No hay tareas completadas o eliminadas
+            allTasks.push(draggedTask); // Añadir al final de allTasks
+        } else {
+            // Insertar antes de la primera tarea que no es pendiente (o sea, al final de las pendientes)
+            allTasks.splice(firstNonPendingIndex, 0, draggedTask);
+        }
+        return;
+    }
+
+    const targetTaskIndex = allTasks.indexOf(targetTask);
+    if (targetTaskIndex === -1) { // No debería pasar si findTask la encontró y está en allTasks
+        console.warn("Target task valid but not found in allTasks array for splicing.");
+        // Fallback: colocarla al final de las tareas pendientes visibles
+        let firstNonPendingIndex = allTasks.findIndex(t => t.done || t.delete);
+        if (firstNonPendingIndex === -1) { allTasks.push(draggedTask); } else { allTasks.splice(firstNonPendingIndex, 0, draggedTask); }
+        return;
+    }
+
+    // Insertar la tarea arrastrada antes de la tarea destino
+    allTasks.splice(targetTaskIndex, 0, draggedTask);
+  } else {
+    // Si no hay targetTaskId (se soltó en un área vacía del contenedor),
+    // colocarla al final de las tareas pendientes, pero antes de cualquier tarea completada o eliminada.
+    let firstNonPendingIndex = allTasks.findIndex(t => t.done || t.delete);
+    if (firstNonPendingIndex === -1) { // No hay tareas completadas o eliminadas
+        allTasks.push(draggedTask); // Añadir al final de allTasks
+    } else {
+        allTasks.splice(firstNonPendingIndex, 0, draggedTask); // Insertar antes de la primera no pendiente
+    }
+  }
+}
+
 function countTaskPendient() {
   var count = allTasks.filter(task => !task.delete && !task.done).length;
   return count;
@@ -384,14 +441,68 @@ function renderPendingTasks() {
   var divListTasksPending = document.getElementById("listTasksPending");
   divListTasksPending.innerHTML = "";
 
+  // Permitir que la lista de tareas pendientes sea un destino para soltar
+  divListTasksPending.addEventListener('dragover', function(event) {
+    event.preventDefault(); // Necesario para permitir el drop
+    // Opcional: añadir feedback visual al área de drop
+    // divListTasksPending.classList.add('drag-over');
+  });
+
+  // Opcional: remover feedback visual cuando el elemento arrastrado sale del área
+  // divListTasksPending.addEventListener('dragleave', function(event) {
+  //   divListTasksPending.classList.remove('drag-over');
+  // });
+
+  // Manejar el evento de soltar (drop)
+  divListTasksPending.addEventListener('drop', function(event) {
+    event.preventDefault();
+    // Opcional: remover feedback visual
+    // divListTasksPending.classList.remove('drag-over');
+
+    const draggedTaskId = event.dataTransfer.getData('text/plain');
+    const targetElement = event.target;
+
+    // Encontrar el article.task más cercano al targetElement, ya que el evento.target podría ser un hijo del article
+    let targetTaskElement = targetElement;
+    while (targetTaskElement && !targetTaskElement.classList.contains('task')) {
+      targetTaskElement = targetTaskElement.parentElement;
+    }
+
+    const targetTaskId = targetTaskElement ? targetTaskElement.id : null;
+
+    if (draggedTaskId !== targetTaskId) { // Evitar soltar sobre sí mismo o fuera de una tarea válida
+        reorderTask(draggedTaskId, targetTaskId);
+        persistTasks();
+        refreshData(); // Renderizar de nuevo para mostrar el orden actualizado
+    }
+  });
+
   allTasks.filter(task => !task.done && !task.delete).forEach(task => {
     var articleTask = document.createElement('article');
     articleTask.classList.add('task');
     articleTask.id = task.id;
 
+    var dragHandle = document.createElement('span');
+    dragHandle.classList.add('drag-handle');
+    dragHandle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#929197"><path d="M360-240v-80h240v80H360Zm0-200v-80h240v80H360Zm0-200v-80h240v80H360Z"/></svg>';
+    // Atributos y eventos de arrastre se añadirán en el siguiente paso del plan
+
     var pTask = document.createElement('p');
     pTask.innerText = task.description;
     pTask.setAttribute('contenteditable', '');
+
+    // Hacer el manejador arrastrable
+    dragHandle.setAttribute('draggable', 'true');
+    dragHandle.addEventListener('dragstart', function(event) {
+      event.dataTransfer.setData('text/plain', task.id);
+      // Opcional: añadir una clase para feedback visual mientras se arrastra
+      // articleTask.classList.add('dragging');
+    });
+
+    // Opcional: remover clase de feedback visual cuando termina el arrastre
+    // dragHandle.addEventListener('dragend', function(event) {
+    //   articleTask.classList.remove('dragging');
+    // });
 
     var btnDoneRestore = document.createElement('button');
     btnDoneRestore.classList.add('btn-done');
@@ -401,6 +512,7 @@ function renderPendingTasks() {
     btnDelete.classList.add('btn-delete');
     btnDelete.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cd3c04"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>'
     
+    articleTask.appendChild(dragHandle); // Añadir el manejador de arrastre
     articleTask.appendChild(pTask);
     articleTask.appendChild(btnDoneRestore);
     articleTask.appendChild(btnDelete);

@@ -295,6 +295,17 @@ li {
   column-gap: 6px;
 }
 
+.task .drag-handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  padding-right: 4px; /* Pequeño espacio entre el manejador y el texto */
+}
+
+.task .drag-handle:active {
+  cursor: grabbing;
+}
+
 .task p {
   background-color: var(--color-surface-a20);
   border-radius: 6px;
