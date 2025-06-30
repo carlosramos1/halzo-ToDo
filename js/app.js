@@ -168,13 +168,18 @@ function eventShowMenu(menuIcon, menuContainer) {
   })
 }
 
-function eventCloseMenu(menuContainer) {
+function eventCloseMenu(menuContainer, closeMenuIcon) {
   menuContainer.addEventListener('click', function(e) {
     // se oculta el menu si se hace click en el fondo o en una opción del menu
     if (e.target === menuContainer || Array.from(menuContainer.querySelectorAll('ul li')).some(li => li === e.target || li.contains(e.target))) {
       menuContainer.classList.remove('show');
     }
   })
+
+  closeMenuIcon.addEventListener('click', function(e) {
+    e.stopPropagation(); // Important to prevent other listeners on menuContainer if any
+    menuContainer.classList.remove('show');
+  });
 }
 
 function eventExportTasks(menuExportTasks) {
@@ -481,8 +486,10 @@ function renderDeletedTasks() {
  */
 var menuIcon = document.querySelector('.menu-icon');
 var menuContainer = document.querySelector('.menu-container');
+var closeMenuIcon = document.getElementById('close-menu-icon'); // Added
+
 eventShowMenu(menuIcon, menuContainer);
-eventCloseMenu(menuContainer);
+eventCloseMenu(menuContainer, closeMenuIcon);
 
 var menuExportTasks = document.querySelector('.menu .export-tasks');
 eventExportTasks(menuExportTasks, menuContainer);
