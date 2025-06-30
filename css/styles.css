@@ -156,14 +156,28 @@ li {
   right: 0;
 }
 
+/* New style for the icon */
+.close-menu-icon-class {
+  position: absolute;
+  top: 22px; /* Align with title visually */
+  left: 18px; /* Align with padding */
+  cursor: pointer;
+  z-index: 10; /* Ensure it's clickable */
+  fill: var(--color-surface-a10); /* Match title color for consistency */
+}
+
 .menu-container .menu .menu-title {
   text-align: center; 
   border-bottom: solid 1px var(--color-surface-a10);
   color: var(--color-surface-a10);
+  padding-bottom: 10px; /* Add some padding to space from border */
+  margin-bottom: 10px; /* Adjust margin */
+  position: relative; /* Needed for z-index or if other elements are absolutely positioned relative to title */
 }
 
 .menu-container .menu {
   padding: 18px;
+  position: relative; /* For absolute positioning of the icon */
 }
 
 .menu-container .menu ul li {

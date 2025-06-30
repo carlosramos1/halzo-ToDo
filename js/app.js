@@ -481,8 +481,17 @@ function renderDeletedTasks() {
  */
 var menuIcon = document.querySelector('.menu-icon');
 var menuContainer = document.querySelector('.menu-container');
+var closeMenuIcon = document.getElementById('close-menu-icon'); // Added
+
 eventShowMenu(menuIcon, menuContainer);
 eventCloseMenu(menuContainer);
+// New event listener for the close icon
+if (closeMenuIcon) {
+  closeMenuIcon.addEventListener('click', function(e) {
+    e.stopPropagation(); // Important to prevent other listeners on menuContainer if any
+    menuContainer.classList.remove('show');
+  });
+}
 
 var menuExportTasks = document.querySelector('.menu .export-tasks');
 eventExportTasks(menuExportTasks, menuContainer);
