@@ -2,14 +2,15 @@
 
 Es una pequeña aplicación web para listar tareas. 
 
-Demo: [https://carlosramos1.github.io/halzo-ToDo/](https://carlosramos1.github.io/hazlo-ToDo/)
+Demo: [https://carlosramos1.github.io/hazlo-ToDo/](https://carlosramos1.github.io/hazlo-ToDo/)
 
 Tiene un diseño simple y muy fácil de usar. Consta de cuatro secciones:
 
 - Información resumen de las tareas pendiente y completadas
 - Un cuadro para añadir tareas
 - Sección de "Tareas pendientes" 
-- y por último sección de "Tareas completadas". 
+- y por último sección de "Tareas completadas".
+- Además se añadio un menú con opciones para exportar, importar y restaurar tareas.
 
 ![captura-hazlo-ToDo.png](captura-hazlo-ToDo.png)
 
@@ -23,8 +24,8 @@ Tiene un diseño simple y muy fácil de usar. Consta de cuatro secciones:
 - Circulo que indica el progreso de tareas realizadas.
 - Exportar tareas en formato JSON.
 - Importar tareas desde un archivo JSON
+- Recuperar tareas eliminadas
 
-> Queda pendiente la funcionalidad de recuperar tareas eliminadas.
 
 ## Tecnologías utilizadas
 
